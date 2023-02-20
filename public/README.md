@@ -4,4 +4,4 @@
 ## Схема web-сайта:
 ### [Основная страница сайта](https://andrewzzz24.github.io/WebProgrammingUniversityCourse/):
 
-![homepage](./ReadmeSources/WebsiteDiagram.png)
+![homepage](ReadmeSources/WebsiteDiagram.png)
