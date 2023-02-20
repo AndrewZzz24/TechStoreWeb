@@ -1,0 +1,143 @@
+.main-section {
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.5);
+    margin: 20px;
+    padding: 20px;
+    text-align: left;
+    text-indent: 10px;
+    white-space: normal;
+    font-family: "OpenSans", sans-serif;
+}
+
+.main-section-text {
+    line-height: normal;
+    letter-spacing: normal;
+}
+
+.main-section-header {
+    font-family: "OpenSans", sans-serif;
+}
+
+.main-section-gallery {
+    margin: 0 20px 20px;
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    width: 100%;
+}
+
+.main-section-gallery-picture {
+    margin: 10px;
+    flex: 1;
+    overflow: hidden;
+}
+
+.contact {
+    padding: 5px;
+    border: #354457;
+    border-radius: 5px;
+    text-decoration: none;
+    background-color: #354457;
+    color: #adbac7;
+}
+
+.list-item {
+    padding: 5px;
+    margin: 5px;
+}
+
+.gallery_image {
+    z-index: 1;
+    width: 100%;
+    object-fit: cover;
+}
+
+@media screen and (max-width: 1250px) {
+    .main-section .main-section-gallery {
+        display: block;
+    }
+}
+
+.header-text {
+    font-size: 20px;
+    margin: 0;
+    text-transform: capitalize
+}
+
+.contact-text {
+    font-size: 10px;
+    color: grey;
+    margin: 0;
+}
+
+.error-text {
+    color: hotpink;
+    text-transform: capitalize
+}
+
+.loading {
+    width: 100px;
+    height: 100px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto
+}
+
+.table {
+    margin: 20px auto;
+}
+
+.grid-table {
+    display: grid;
+    border-width: 1px;
+    border-style: solid;
+    border-color: beige;
+    grid-template-columns: 1fr 1fr;
+}
+
+thead, tbody, tr {
+    display: contents;
+}
+
+tbody tr td {
+    padding: 10px;
+    text-align: center;
+    border: 1px solid black;
+}
+
+tr:nth-of-type(odd) td {
+    background-color: #354457;
+}
+
+tr:nth-of-type(even) td {
+    background-color: #706966;
+}
+
+thead tr th {
+    background-color: #3b4e90;
+    text-align: center;
+    border-bottom: 1px solid beige;
+}
+
+.swiper {
+    height: 700px;
+}
+
+.swiper-slide img {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    object-fit: cover;
+    width: auto;
+    height: auto;
+}
+
+.swiper-pagination-bullet-active {
+    background-color: #bcbfc9 !important;
+}
+
+@media screen and (max-width: 700px) {
+    .swiper {
+        display: none;
+    }
+}

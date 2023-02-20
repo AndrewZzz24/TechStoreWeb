@@ -1,0 +1,82 @@
+.submit-button {
+    color: white;
+    background-color: #354457;
+    text-decoration: none;
+    border-radius: 4px;
+    border: none;
+    padding: 10px 16px;
+    text-align: center;
+    display: inline-block;
+    transition-duration: 0.5s;
+    cursor: pointer;
+    max-height: 40px;
+}
+
+.text-field {
+    border-radius: 4px;
+    padding: 10px 16px;
+    text-align: center;
+    outline: none;
+    transition: 0.4s;
+    box-sizing: border-box;
+    border: 2px solid lightgrey;
+    max-height: 40px;
+}
+
+.feedback-form{
+    min-width: 100%;
+    display: grid;
+    grid-gap: 5px;
+    padding-right: 10px;
+    grid-template-columns: 1fr 1fr 5fr 1fr;
+    grid-template-areas: "box1 box2 box3 box4";
+}
+
+@media screen and (max-width: 820px){
+    .feedback-form{
+        display: grid;
+        min-width: 100%;
+        grid-template-columns: 1fr;
+        margin-bottom: 2px;
+        grid-template-areas:
+                        "box1"
+                        "box2"
+                        "box3"
+                        "box4";
+    }
+
+    .text-field{
+        margin-bottom: 4px;
+    }
+}
+
+.box1 {
+    grid-area: box1;
+}
+
+.box2 {
+    grid-area: box2;
+}
+
+.box3 {
+    grid-area: box3;
+}
+
+.box4 {
+    grid-area: box4;
+}
+
+.grid-form-table {
+    display: grid;
+    width: 100%;
+    border-spacing: 1px;
+    border-width: 1px;
+    border-style: solid;
+    border-color: beige;
+    grid-template-columns: 1fr 1fr 4fr
+}
+
+.grid-from-table-body {
+    display: contents;
+}
+

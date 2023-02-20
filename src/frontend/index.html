@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="description" content="Резюме страница Виктора Хапки">
+    <meta name="keywords" content="resume, Viktor, Hapka, CV">
+    <link rel="shortcut icon" href="Sources/MediaSources/main_icon.png" type="image/png">
+    <link rel="stylesheet" href="Sources/Styles/Layouts/body.css" type="text/css">
+    <link rel="stylesheet" href="Sources/Styles/Layouts/header.css" type="text/css">
+    <link rel="stylesheet" href="Sources/Styles/Layouts/main.css" type="text/css">
+    <link rel="stylesheet" href="Sources/Styles/Layouts/footer.css" type="text/css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.css"/>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@1,300&display=swap" rel="stylesheet">
+    <script src="Sources/Scripts/loadTimer.js"></script>
+    <script src="Sources/Scripts/activeButton.js"></script>
+    <title>Резюме Страница Виктора Хапки</title>
+</head>
+<body class="default-body">
+<header class="default-header">
+    <h1 class="default-header-name">
+        Виктор Хапка
+    </h1>
+    <nav class="default-header-navbar">
+        <a id="index" class="default-header-navbar-button" href="index.html">Главная</a>
+        <a id="experience" class="default-header-navbar-button" href="experience.html">Опыт Работы</a>
+        <a id="projects" class="default-header-navbar-button" href="projects.html">Мои Проекты</a>
+        <a id="feedback" class="default-header-navbar-button" href="feedback.html">Обратная Связь</a>
+    </nav>
+</header>
+<main>
+    <section class="main-section">
+        <h2 class="main-section-header">
+            Информация обо мне
+        </h2>
+        <p class="main-section-text">
+            <span>
+                Виктор Хапка, 5 лет опыта в сфере, люблю программировать и разрабатывать базы данных.
+            </span>
+        </p>
+    </section>
+    <aside class="main-section">
+        <h2 class="main-section-header">
+            Контактные данные
+        </h2>
+        <div class="main-section-text">
+            <ol>
+                <li class="list-item">
+                    <a class="contact" href="tel:+78005553535">+7 (800) 555-35-35</a>
+                </li>
+                <li class="list-item">
+                    <a class="contact" href="mailto:viktorhapka@gmail.com">viktorhapka@gmail.com</a>
+                </li>
+            </ol>
+        </div>
+    </aside>
+    <section class="main-section">
+        <h2 class="main-section-header">
+            Мои любимые технологии
+        </h2>
+        <div class="swiper mySwiper">
+            <div class="swiper-wrapper">
+                <div class="swiper-slide">
+                    <img alt="java_logo" src="Sources/MediaSources/java_logo.jpg">
+                </div>
+                <div class="swiper-slide">
+                    <img alt="python-logo" src="Sources/MediaSources/python_logo.jpg">
+                </div>
+                <div class="swiper-slide">
+                    <img alt="field_compresed" src="Sources/MediaSources/field-compressed.jpg">
+                </div>
+            </div>
+            <div class="swiper-pagination"></div>
+        </div>
+    </section>
+    <section class="main-section">
+        <h2 class="main-section-header">
+            Галлерея изображений
+        </h2>
+        <div class="main-section-gallery">
+            <div class="main-section-gallery-picture">
+                <img alt="field" class="gallery_image" src="Sources/MediaSources/field.jpg">
+            </div>
+            <div class="main-section-gallery-picture">
+                <img alt="field" class="gallery_image" src="Sources/MediaSources/field.jpg">
+            </div>
+            <div class="main-section-gallery-picture">
+                <img alt="field" class="gallery_image" src="Sources/MediaSources/field.jpg">
+            </div>
+            <div class="main-section-gallery-picture">
+                <img alt="field" class="gallery_image" src="Sources/MediaSources/field.jpg">
+            </div>
+        </div>
+    </section>
+    <section class="main-section">
+        <div class="table">
+            <table class="grid-table">
+                <thead>
+                <tr>
+                    <th>Technology</th>
+                    <th>Level</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>Java Core</td>
+                    <td>Experienced</td>
+                </tr>
+                <tr>
+                    <td>Spring Framework</td>
+                    <td>Familiar</td>
+                </tr>
+                <tr>
+                    <td>Python</td>
+                    <td>Familiar</td>
+                </tr>
+                <tr>
+                    <td>C#</td>
+                    <td>Familiar</td>
+                </tr>
+                <tr>
+                    <td>Java Script</td>
+                    <td>Familiar</td>
+                </tr>
+                <tr>
+                    <td>Php</td>
+                    <td>Familiar</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+    <section class="main-section">
+        <h2 class="main-section-header">
+            Цитаты великих людей
+        </h2>
+        <blockquote class="main-section-text">
+            <p>
+            <span>
+                <q>Hard work pays off. <br> H<sub>2</sub>O - просто вода </q>
+            </span>
+            </p>
+            <cite>
+                <span> (С) Успешный человек </span>
+            </cite>
+        </blockquote>
+    </section>
+</main>
+<footer class="default-footer">
+    <div class="default-footer-section">
+        <nav class="default-footer-navbar">
+            <a href="mailto:viktorhapka@gmail.com">Email</a>
+            <a target="_blank" href="https://vk.com">VK </a>
+            <a target="_blank" href="https://linkedin.com">LinkedIn </a>
+            <a target="_blank" href="https://github.com">GitHub </a>
+            <a target="_blank" href="https://leetcode.com">LeetCode </a>
+        </nav>
+    </div>
+    <div>
+        <span id="load-time"></span>
+    </div>
+</footer>
+<script src="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.js"></script>
+<script src="Sources/Scripts/swiper.js"></script>
+</body>
+</html>

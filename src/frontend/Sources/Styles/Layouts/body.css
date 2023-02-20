@@ -1,0 +1,14 @@
+.default-body {
+    background-color: #22272e;
+    color: #adbac7;
+    width: 100%;
+    height: 100%;
+}
+
+html {
+    overflow-x: hidden;
+}
+
+main {
+    min-height: calc(100vh - 260px);
+}

@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="description" content="Описание футбольных метрик для платформы xGLab">
+    <meta name="Keywords" content="metrics, xglab, XT, EPV, метрики">
+    <link rel="shortcut icon" href="/Source/Images/logo.png" type="image/png">
+    <link rel="stylesheet" href="Sources/Styles/Layouts/headerDDG.css" type="text/css">
+    <link rel="stylesheet" href="Sources/Styles/Bloks/text_blockDDG.css" type="text/css">
+    <link rel="stylesheet" href="Sources/Styles/Layouts/baseDDG.css" type="text/css">
+    <link rel="stylesheet" href="Sources/Styles/Layouts/footerDDG.css" type="text/css">
+    <link rel="stylesheet" href="Sources/Styles/Layouts/mainDDG.css" type="text/css">
+    <title>xGLab Metrics</title>
+</head>
+<body>
+<header class="default-header">
+    <nav class="navbar-default">
+        <a class="navbar-logo" href="./index.html">
+            <img alt="logo" class="navbar-logo" src="Source/Images/logo.png">
+        </a>
+        <a class="navbar-button" href="./metrics.html">Метрики</a>
+        <a class="navbar-button" href="./about_us.html">О нас</a>
+    </nav>
+</header>
+<main class="default-main">
+    <div class="card">
+        <h2>
+            <span>xGLab</span>
+        </h2>
+        <p class="main-text">
+            <span>xGLab - платформа футбольной аналитики</span>
+        </p>
+    </div>
+    <div class="card">
+        <h2>
+            <span>Метрики</span>
+        </h2>
+        <img alt="epv" class="metric_image" src="Source/Images/epv.PNG">
+        <h3>
+            <span>Метрики на <a target="_blank" href="https://xglab.pro/">сайте</a></span>
+        </h3>
+        <div class="main-text">
+            <h4>
+                EPV
+            </h4>
+            <p>
+                <span>
+                        EPV (Expected Possession Value) - ожидаемая ценность владения.
+                    Строго говоря, эта метрика изначально придумана для того, чтобы оценить ситуацию на поле в моменте.
+                    Модель получает на вход положение игрока с мячом и оценивает,
+                    какова вероятность в такой позиции забить гол за несколько следующих действий,
+                    и какая вероятность потерять мяч.
+                    В идеале хотелось бы иметь еще и данные о позиции всех остальных игроков на поле,
+                    но чаще всего таких данных нет, поэтому в основном используются модели на Event-данных.
+                </span>
+            </p>
+            <p>
+                <span>Формула для рассчёта EPV:</span>
+            </p>
+            <p>
+                <span>value = EPV<sub>end</sub> * P<sub>lost</sub> - EPV<sub>start</sub></span>
+            </p>
+        </div>
+        <h3>
+            <span>Метрики в <a target="_blank" href="https://t.me/xGLabBot">боте</a></span>
+        </h3>
+        <ol class="main-text">
+            <li>
+                <h4>
+                    Сонары
+                </h4>
+                <span>
+                    В современной футбольной аналитике диаграммы-сонары – один из самых популярных способов графического отображения диапазона передач игрока или команды. Основная задача сонаров – показать, в каких зонах игрок активен с мячом и как он продвигает мяч. Поле делится на 30 зон, 6 по горизонтали и 5 по вертикали, в каждой из которых строится polar-chart. Polar-chart – это диаграмма, которая состоит из секторов. В нашем случае длина/размер сектора показывает, как много передач было сделано из зоны, в котором находится диаграмма в направлении этого сектора.
+                </span>
+            </li>
+            <li>
+                <h4>
+                    Частота передач в
+                </h4>
+                <span>
+                    Показывает как много передач происходит в определённую зону.
+                </span>
+            </li>
+            <li>
+                <h4>
+                    Частота передач из
+                </h4>
+                <span>
+                    Показывает как много передач происходит из определённой зоны.
+                </span>
+            </li>
+        </ol>
+    </div>
+</main>
+<footer class="default-footer">
+    <div class="card">
+        <h2>Контакты</h2>
+        <p class="footer-text">
+            <span>
+                <a target="_blank" href="https://t.me/xGLabBot">t.me/xGLabBot</a> - Футбольный диаграмы. Сонары и тепловые карты
+            </span>
+        </p>
+        <p class="footer-text">
+            <span>
+                <a target="_blank" href="https://t.me/xglab_help">t.me/xglab_help</a> - Если возникли проблемы с сайтом или ботом, напишите сюда
+            </span>
+        </p>
+        <p class="footer-text">
+            <span>
+                <a target="_blank" href="https://t.me/xGLabBot">t.me/xGLabBot</a> - Новостной канал
+            </span>
+        </p>
+    </div>
+</footer>
+</body>
+</html>
