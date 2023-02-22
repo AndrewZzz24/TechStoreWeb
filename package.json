@@ -2,7 +2,7 @@
   "name": "andrew-zmushko-web-programming2nd-semetre",
   "version": "0.0.1",
   "description": "",
-  "author": "Andrew Zmushko",
+  "author": "Andrew Zmushko <qwe@gmail.com> (azweb.render.com)",
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
