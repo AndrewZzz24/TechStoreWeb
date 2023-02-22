@@ -5,4 +5,4 @@
 ### [Основная страница сайта](https://andrewzzz24.github.io/WebProgrammingUniversityCourse/):
 
 ![homepage](ReadmeSources/WebsiteDiagram.png)
-[site](azweb.render.com)
+[site](https://azweb.onrender.com)
