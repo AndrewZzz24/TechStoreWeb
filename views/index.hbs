@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  {{> head title="Резюме Страница Виктора Хапки"}}
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.css" />
+</head>
+<body class="default-body">
+{{> header }}
+<main>
+  <section class="main-section">
+    <h2 class="main-section-header">
+      Информация обо мне
+    </h2>
+    <p class="main-section-text">
+        <span>
+            Виктор Хапка, 5 лет опыта в сфере, люблю программировать и разрабатывать базы данных.
+        </span>
+    </p>
+  </section>
+  <aside class="main-section">
+    <h2 class="main-section-header">
+      Контактные данные
+    </h2>
+    <div class="main-section-text">
+      <ol>
+        <li class="list-item">
+          <a class="contact" href="tel:+78005553535">+7 (800) 555-35-35</a>
+        </li>
+        <li class="list-item">
+          <a class="contact" href="mailto:viktorhapka@gmail.com">viktorhapka@gmail.com</a>
+        </li>
+      </ol>
+    </div>
+  </aside>
+  <section class="main-section">
+    <h2 class="main-section-header">
+      Мои любимые технологии
+    </h2>
+    <div class="swiper mySwiper">
+      <div class="swiper-wrapper">
+        <div class="swiper-slide">
+          <img alt="java_logo" src="Sources/MediaSources/java_logo.jpg">
+        </div>
+        <div class="swiper-slide">
+          <img alt="python-logo" src="Sources/MediaSources/python_logo.jpg">
+        </div>
+        <div class="swiper-slide">
+          <img alt="field_compresed" src="Sources/MediaSources/field-compressed.jpg">
+        </div>
+      </div>
+      <div class="swiper-pagination"></div>
+    </div>
+  </section>
+  <section class="main-section">
+    <h2 class="main-section-header">
+      Галлерея изображений
+    </h2>
+    <div class="main-section-gallery">
+      <div class="main-section-gallery-picture">
+        <img alt="field" class="gallery_image" src="Sources/MediaSources/field.jpg">
+      </div>
+      <div class="main-section-gallery-picture">
+        <img alt="field" class="gallery_image" src="Sources/MediaSources/field.jpg">
+      </div>
+      <div class="main-section-gallery-picture">
+        <img alt="field" class="gallery_image" src="Sources/MediaSources/field.jpg">
+      </div>
+      <div class="main-section-gallery-picture">
+        <img alt="field" class="gallery_image" src="Sources/MediaSources/field.jpg">
+      </div>
+    </div>
+  </section>
+  <section class="main-section">
+    <div class="table">
+      <table class="grid-table">
+        <thead>
+        <tr>
+          <th>Technology</th>
+          <th>Level</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+          <td>Java Core</td>
+          <td>Experienced</td>
+        </tr>
+        <tr>
+          <td>Spring Framework</td>
+          <td>Familiar</td>
+        </tr>
+        <tr>
+          <td>Python</td>
+          <td>Familiar</td>
+        </tr>
+        <tr>
+          <td>C#</td>
+          <td>Familiar</td>
+        </tr>
+        <tr>
+          <td>Java Script</td>
+          <td>Familiar</td>
+        </tr>
+        <tr>
+          <td>Php</td>
+          <td>Familiar</td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+  <section class="main-section">
+    <h2 class="main-section-header">
+      Цитаты великих людей
+    </h2>
+    <blockquote class="main-section-text">
+      <p>
+            <span>
+                <q>Hard work pays off. <br> H<sub>2</sub>O - просто вода </q>
+            </span>
+      </p>
+      <cite>
+        <span> (С) Успешный человек </span>
+      </cite>
+    </blockquote>
+  </section>
+</main>
+{{> footer}}
+<script src="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.js"></script>
+<script src="Sources/Scripts/swiper.js"></script>
+</body>
+</html>
