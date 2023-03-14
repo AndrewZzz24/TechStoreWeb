@@ -22,7 +22,7 @@ function setUser() {
     existedUserdata === null ? 'guest' : existedUserdata['username'];
 
   let t = document.querySelector('.user-mode');
-  t.innerHTML = '<span>Logged as Customer: ' + setUsername + '</span>';
+  t.innerHTML = '<span>Logged in as Customer: ' + setUsername + '</span>';
   console.log(t.innerHTML);
 }
 
