@@ -1,14 +1,9 @@
 import { Controller, Get, Render, UseInterceptors } from '@nestjs/common';
-import { AppService } from './app.service';
-import { ServerTimeInterceptor } from './logging.interceptor';
+import { ServerTimeInterceptor } from './serverTime.interceptor';
 
 @UseInterceptors(ServerTimeInterceptor)
 @Controller()
 export class AppController {
-  // @Get()
-  // getHello(): string {
-  //   return this.appService.getHello();
-  // }
   @Get('login')
   @Render('login.hbs') // <= Название вашего представления
   getLoginPage() {

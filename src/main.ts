@@ -4,7 +4,7 @@ import { join } from 'path';
 import { AppModule } from './app.module';
 import * as hbs from 'hbs';
 import * as fs from 'fs';
-import { ServerTimeInterceptor } from './logging.interceptor';
+import { ServerTimeInterceptor } from './serverTime.interceptor';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
