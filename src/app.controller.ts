@@ -1,8 +1,8 @@
 import { Controller, Get, Render, UseInterceptors } from '@nestjs/common';
 import { AppService } from './app.service';
-import { LoggingInterceptor } from './logging.interceptor';
+import { ServerTimeInterceptor } from './logging.interceptor';
 
-@UseInterceptors(LoggingInterceptor)
+@UseInterceptors(ServerTimeInterceptor)
 @Controller()
 export class AppController {
   // @Get()
