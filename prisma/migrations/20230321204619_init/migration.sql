@@ -2,10 +2,29 @@
 CREATE TYPE "HelpDeskSupportRequestStatus" AS ENUM ('RESOLVED', 'CANCELED');
 
 -- CreateTable
-CREATE TABLE "User" (
+CREATE TABLE "SiteUserData" (
     "id" SERIAL NOT NULL,
     "email" TEXT NOT NULL,
-    "name" TEXT,
+    "name" TEXT NOT NULL,
+    "username" TEXT NOT NULL,
+    "password" TEXT NOT NULL,
+    "role" TEXT NOT NULL,
+
+    CONSTRAINT "SiteUserData_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "Admin" (
+    "id" SERIAL NOT NULL,
+    "siteUserDataId" INTEGER,
+
+    CONSTRAINT "Admin_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "User" (
+    "id" SERIAL NOT NULL,
+    "siteUserDataId" INTEGER,
 
     CONSTRAINT "User_pkey" PRIMARY KEY ("id")
 );
@@ -86,7 +105,7 @@ CREATE TABLE "Review" (
 );
 
 -- CreateIndex
-CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
+CREATE UNIQUE INDEX "SiteUserData_email_key" ON "SiteUserData"("email");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Transaction_userId_key" ON "Transaction"("userId");
@@ -96,6 +115,12 @@ CREATE UNIQUE INDEX "TransactionReceipt_transactionId_key" ON "TransactionReceip
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Cart_userId_key" ON "Cart"("userId");
+
+-- AddForeignKey
+ALTER TABLE "Admin" ADD CONSTRAINT "Admin_siteUserDataId_fkey" FOREIGN KEY ("siteUserDataId") REFERENCES "SiteUserData"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "User" ADD CONSTRAINT "User_siteUserDataId_fkey" FOREIGN KEY ("siteUserDataId") REFERENCES "SiteUserData"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "HelpDeskSupportHistory" ADD CONSTRAINT "HelpDeskSupportHistory_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE SET NULL ON UPDATE CASCADE;

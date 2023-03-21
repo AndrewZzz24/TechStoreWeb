@@ -2,7 +2,7 @@
 ## Змушко Андрей М33031
 
 ## Схема web-сайта:
-### [Основная страница сайта](https://andrewzzz24.github.io/WebProgrammingUniversityCourse/):
+### [Основная страница сайта](https://azweb.onrender.com):
 
-![homepage](ReadmeSources/WebsiteDiagram.png)
-[site](https://azweb.onrender.com)
+![homepage](public/ReadmeSources/migrations.jpg)
+

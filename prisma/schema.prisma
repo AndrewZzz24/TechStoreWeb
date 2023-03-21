@@ -7,31 +7,30 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model SiteUser {
-  id                     Int                      @id @default(autoincrement())
-  email                  String                   @unique
-  name                   String?
-  cart                   Cart?
-  transactions           Transaction[]
-  helpDeskSupportHistory HelpDeskSupportHistory[]
+model SiteUserData {
+  id       Int     @id @default(autoincrement())
+  email    String  @unique
+  name     String
+  username String
+  password String
+  role     String
+  Admin    Admin[]
+  User     User[]
 }
 
 model Admin {
-  id                     Int                      @id @default(autoincrement())
-  email                  String                   @unique
-  name                   String?
-  cart                   Cart?
-  transactions           Transaction[]
-  helpDeskSupportHistory HelpDeskSupportHistory[]
+  id             Int           @id @default(autoincrement())
+  siteUserData   SiteUserData? @relation(fields: [siteUserDataId], references: [id])
+  siteUserDataId Int?
 }
 
 model User {
   id                     Int                      @id @default(autoincrement())
-  email                  String                   @unique
-  name                   String?
   cart                   Cart?
   transactions           Transaction[]
   helpDeskSupportHistory HelpDeskSupportHistory[]
+  siteUserData           SiteUserData?            @relation(fields: [siteUserDataId], references: [id])
+  siteUserDataId         Int?
 }
 
 model HelpDeskSupportHistory {
