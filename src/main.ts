@@ -4,12 +4,12 @@ import { join } from 'path';
 import { AppModule } from './app.module';
 import * as hbs from 'hbs';
 import * as fs from 'fs';
-import { LoggingInterceptor } from './logging.interceptor';
+import { ServerTimeInterceptor } from './logging.interceptor';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
-  app.useGlobalInterceptors(new LoggingInterceptor());
+  app.useGlobalInterceptors(new ServerTimeInterceptor());
   app.useStaticAssets(join(__dirname, '..', '/public'));
   app.setBaseViewsDir(join(__dirname, '..', 'views'));
   app.setViewEngine('hbs');
