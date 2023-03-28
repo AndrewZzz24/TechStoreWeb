@@ -8,74 +8,76 @@ datasource db {
 }
 
 model SiteUserData {
-  id       Int     @id @default(autoincrement())
-  email    String  @unique
+  id       Int    @id @default(autoincrement())
+  email    String @unique
   name     String
   username String
   password String
   role     String
-  Admin    Admin[]
-  User     User[]
+  Admin    Admin?
+  User     User?
 }
 
 model Admin {
-  id             Int           @id @default(autoincrement())
-  siteUserData   SiteUserData? @relation(fields: [siteUserDataId], references: [id])
-  siteUserDataId Int?
+  id             Int          @id @default(autoincrement())
+  siteUserDataId Int          @unique
+  siteUserData   SiteUserData @relation(fields: [siteUserDataId], references: [id])
 }
 
 model User {
   id                     Int                      @id @default(autoincrement())
   cart                   Cart?
-  transactions           Transaction[]
+  orders                 Order[]
   helpDeskSupportHistory HelpDeskSupportHistory[]
-  siteUserData           SiteUserData?            @relation(fields: [siteUserDataId], references: [id])
-  siteUserDataId         Int?
-}
-
-model HelpDeskSupportHistory {
-  id                 Int                          @id @default(autoincrement())
-  requestSupportDate DateTime                     @default(now())
-  topic              String
-  status             HelpDeskSupportRequestStatus
-  User               User?                        @relation(fields: [userId], references: [id])
-  userId             Int?
-}
-
-enum HelpDeskSupportRequestStatus {
-  RESOLVED
-  CANCELED
-}
-
-model Transaction {
-  id                 Int                 @id @default(autoincrement())
-  createdAt          DateTime            @default(now())
-  moneyAmount        Float
-  currency           String
-  paymentMethodId    String
-  userId             Int                 @unique
-  user               User                @relation(fields: [userId], references: [id])
-  TransactionReceipt TransactionReceipt?
-}
-
-model TransactionReceipt {
-  id            Int         @id @default(autoincrement())
-  createdAt     DateTime    @default(now())
-  bio           String
-  transactionId Int         @unique
-  transaction   Transaction @relation(fields: [transactionId], references: [id])
+  siteUserDataId         Int                      @unique
+  siteUserData           SiteUserData             @relation(fields: [siteUserDataId], references: [id])
 }
 
 model Cart {
-  id           Int           @id @default(autoincrement())
-  createdAt    DateTime      @default(now())
-  bio          String
-  userId       Int           @unique
-  user         User          @relation(fields: [userId], references: [id])
-  productItems ProductItem[]
+  id              Int               @id @default(autoincrement())
+  createdAt       DateTime          @default(now())
+  bio             String
+  userId          Int               @unique
+  user            User              @relation(fields: [userId], references: [id])
+  shopProductItem ShopProductItem[]
+  Order           Order?
 }
 
-model ProductItem {
+model Order {
+  id              Int         @id @default(autoincrement())
+  createdAt       DateTime    @default(now())
+  moneyAmount     Float
+  currency        String
+  paymentMethodId String
+  userId          Int         @unique
+  user            User        @relation(fields: [userId], references: [id])
+  orderLines      OrderLine[]
+  Cart            Cart?       @relation(fields: [cartId], references: [id])
+  cartId          Int?        @unique
+}
+
+model OrderLine {
+  id                 Int              @id @default(autoincrement())
+  orderId            Int              @unique
+  tax                Float
+  totalAmount        Float
+  discount           Float
+  order              Order            @relation(fields: [orderId], references: [id])
+  orderProductItem   OrderProductItem @relation(fields: [orderProductItemId], references: [id])
+  orderProductItemId Int              @unique
+}
+
+model OrderProductItem {
+  id                Int        @id @default(autoincrement())
+  createdAt         DateTime   @default(now())
+  price             Float
+  amount            Int
+  title             String
+  amountOnWarehouse Int
+  OrderLine         OrderLine?
+}
+
+model ShopProductItem {
   id                Int        @id @default(autoincrement())
   createdAt         DateTime   @default(now())
   price             Float
@@ -83,22 +85,37 @@ model ProductItem {
   amountOnWarehouse Int
   categories        Category[]
   reviews           Review[]
+  Cart              Cart?      @relation(fields: [cartId], references: [id])
   cartId            Int?
-  cart              Cart?      @relation(fields: [cartId], references: [id])
 }
 
 model Category {
-  id            Int          @id @default(autoincrement())
-  description   String
-  ProductItem   ProductItem? @relation(fields: [productItemId], references: [id])
-  productItemId Int?
+  id                Int             @id @default(autoincrement())
+  description       String
+  shopProductItem   ShopProductItem @relation(fields: [shopProductItemId], references: [id])
+  shopProductItemId Int
 }
 
 model Review {
-  id            Int          @id @default(autoincrement())
-  author        String
-  reviewMessage String
-  date          DateTime
-  ProductItem   ProductItem? @relation(fields: [productItemId], references: [id])
-  productItemId Int?
+  id                Int             @id @default(autoincrement())
+  author            String
+  reviewMessage     String
+  date              DateTime
+  shopProductItem   ShopProductItem @relation(fields: [shopProductItemId], references: [id])
+  shopProductItemId Int
+}
+
+model HelpDeskSupportHistory {
+  id                 Int                          @id @default(autoincrement())
+  requestSupportDate DateTime                     @default(now())
+  topic              String
+  status             HelpDeskSupportRequestStatus
+  User               User                         @relation(fields: [userId], references: [id])
+  userId             Int
+}
+
+enum HelpDeskSupportRequestStatus {
+  CREATED
+  RESOLVED
+  CANCELED
 }
