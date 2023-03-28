@@ -36,7 +36,6 @@ model User {
 model Cart {
   id              Int               @id @default(autoincrement())
   createdAt       DateTime          @default(now())
-  bio             String
   userId          Int               @unique
   user            User              @relation(fields: [userId], references: [id])
   shopProductItem ShopProductItem[]
