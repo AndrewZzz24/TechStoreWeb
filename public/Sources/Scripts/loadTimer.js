@@ -1,11 +1,12 @@
 (function () {
-    let startTime = new Date().getTime();
+  let startTime = new Date().getTime();
 
-    function timer() {
-        document.getElementById('load-time').innerHTML = 'Loaded in ' + (new Date().getTime() - startTime) / 1000 + ' seconds';
-    }
+  function timer() {
+    document.getElementById('load-time').innerHTML =
+      'Loaded in ' + (new Date().getTime() - startTime) + 'ms';
+  }
 
-    document.addEventListener("DOMContentLoaded", _ => {
-        timer()
-    });
+  document.addEventListener('DOMContentLoaded', (_) => {
+    timer();
+  });
 })();
