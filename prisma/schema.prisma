@@ -85,8 +85,8 @@ model ShopProductItem {
   amountOnWarehouse Int
   categories        Category[]
   reviews           Review[]
-  Cart              Cart?      @relation(fields: [cartId], references: [id])
-  cartId            Int?
+  Cart              Cart       @relation(fields: [cartId], references: [id])
+  cartId            Int
 }
 
 model Category {
