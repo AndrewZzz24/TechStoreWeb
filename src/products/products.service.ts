@@ -3,15 +3,15 @@ import { ProductDto } from './dto/product.dto';
 
 @Injectable()
 export class ProductsService {
-  getProduct(productId: string): ProductDto {
-    throw NotImplementedException;
+  getProduct(productId: string): Promise<ProductDto> {
+    throw new NotImplementedException();
   }
 
-  createProduct(productName: string): ProductDto {
-    throw NotImplementedException;
+  createProduct(productName: string): Promise<ProductDto> {
+    throw new NotImplementedException();
   }
 
-  deleteProduct(productId: string): boolean {
-    throw NotImplementedException;
+  deleteProduct(productId: string): Promise<boolean> {
+    throw new NotImplementedException();
   }
 }

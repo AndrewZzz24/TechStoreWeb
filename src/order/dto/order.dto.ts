@@ -1,8 +1,16 @@
+import { ApiProperty } from '@nestjs/swagger';
+
 export class OrderDto {
-  readonly id?: number;
+  @ApiProperty()
+  readonly id: number;
+  @ApiProperty()
   readonly customerUsername: string;
+  @ApiProperty()
   readonly createAt: string;
+  @ApiProperty()
   readonly products: string[];
+  @ApiProperty()
   readonly price: number;
-  readonly info: Map<string, string>;
+  @ApiProperty()
+  readonly info: string;
 }

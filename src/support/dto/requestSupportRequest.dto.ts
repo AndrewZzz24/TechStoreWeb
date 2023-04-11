@@ -1,12 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-export class SupportRequest {
+export class RequestSupportRequestDto {
   @ApiProperty()
   readonly id: number;
   @ApiProperty()
   readonly usernameInitiator: string;
   @ApiProperty()
-  title: string;
+  readonly title: string;
   @ApiProperty()
-  info: string;
+  readonly info: string;
 }

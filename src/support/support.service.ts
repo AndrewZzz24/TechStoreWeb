@@ -1,21 +1,21 @@
 import { Injectable, NotImplementedException } from '@nestjs/common';
-import { SupportRequestDto } from './dto/supportRequest.dto';
-import { SupportDto } from './dto/SupportDto';
+import { SupportRequest } from './dto/supportRequest.dto';
+import { RequestSupportRequestDto } from './dto/requestSupportRequest.dto';
 
 @Injectable()
 export class SupportService {
-  getRequest(requestId: string): SupportDto {
-    throw NotImplementedException;
+  getRequest(requestId: string): Promise<SupportRequest> {
+    throw new NotImplementedException();
   }
 
   createRequest(
     username: string,
-    supportRequestDto: SupportRequestDto,
-  ): boolean {
-    throw NotImplementedException;
+    supportRequestDto: RequestSupportRequestDto,
+  ): Promise<boolean> {
+    throw new NotImplementedException();
   }
 
-  deleteRequest(requestId: string): boolean {
-    throw NotImplementedException;
+  deleteRequest(requestId: string): Promise<boolean> {
+    throw new NotImplementedException();
   }
 }
