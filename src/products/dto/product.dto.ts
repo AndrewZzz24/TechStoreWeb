@@ -1,4 +1,4 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty } from "@nestjs/swagger";
 
 export class ProductDto {
   @ApiProperty()
@@ -13,4 +13,12 @@ export class ProductDto {
   readonly price: number;
   @ApiProperty()
   readonly info: string;
+
+  constructor(id: number, name: string, description: string, categories: string[], price: number, info: string) {
+    this.id = id;
+    this.name = name;
+    this.description = description;
+    this.price = price;
+    this.info = info;
+  }
 }

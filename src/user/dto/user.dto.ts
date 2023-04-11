@@ -9,4 +9,11 @@ export class UserDto {
   readonly password: string;
   @ApiProperty()
   readonly info: string;
+
+  constructor(id: number, username: string, password: string, info: string) {
+    this.id = id
+    this.username = username
+    this.password = password
+    this.info = info
+  }
 }

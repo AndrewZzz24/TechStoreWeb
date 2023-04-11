@@ -9,4 +9,11 @@ export class SupportRequest {
   title: string;
   @ApiProperty()
   info: string;
+
+  constructor(id: number, usernameInitiator: string, title: string, info: string) {
+    this.id = id;
+    this.usernameInitiator = usernameInitiator;
+    this.title = title;
+    this.info = info;
+  }
 }

@@ -6,10 +6,12 @@ import * as hbs from 'hbs';
 import * as fs from 'fs';
 import { ServerTimeInterceptor } from './serverTime.interceptor';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { PrismaService } from "./prisma.service";
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
-
+  const prismaService = app.get(PrismaService);
+  await prismaService.enableShutdownHooks(app)
   const config = new DocumentBuilder()
     .setTitle('TechStore')
     .setDescription('The "TechStore" WebService API description')

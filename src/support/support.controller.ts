@@ -43,7 +43,7 @@ export class SupportController {
   async createSupportRequest(
     @Param('uid') username: string,
     @Body() supportRequestDto: RequestSupportRequestDto,
-  ): Promise<boolean> {
+  ): Promise<SupportRequest> {
     return this.supportService.createRequest(username, supportRequestDto);
   }
 

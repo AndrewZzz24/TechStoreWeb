@@ -1,51 +1,71 @@
-import { Injectable, NotImplementedException } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
 import { UserDto } from "./dto/user.dto";
 import { PrismaService } from "../prisma.service";
-import { PrismaClient } from "@prisma/client";
 
-// const prisma = new PrismaClient()
 @Injectable()
 export class UserService {
 
-  constructor(private prisma: PrismaService) {}
+  constructor(private prisma: PrismaService) {
+  }
 
   async getUser(
     uid: string
   ): Promise<UserDto> {
-    const posts = await this.prisma.user.findMany();
-    throw new NotImplementedException();
+    const userData = await this.prisma.siteUserData.findFirst({
+      where: {
+        username: uid
+      }
+    });
+    const user = await this.prisma.user.findFirst({
+      where: {
+        siteUserDataId: userData.id
+      }
+    });
+
+    return new UserDto(user.id, userData.username, userData.password, userData.email);
   }
 
   async createUser(uid: string): Promise<UserDto> {
-
+    let email: string = uid + "@techstore.ru";
     const siteUserData = await this.prisma.siteUserData.create({
       data: {
-        email: "uid@techstore.ru",
+        email: email,
         name: uid,
         username: uid,
         password: "asd",
-        role: "asd"
+        role: "USER"
       }
     });
 
     const user = await this.prisma.user.create({
       data: {
-        siteUserDataId: siteUserData.id
+        siteUserDataId: Number(siteUserData.id)
       }
     });
-    return new UserDto();
+    return new UserDto(user.id, siteUserData.username, siteUserData.password, siteUserData.email);
   }
 
   async deleteUser(uid: string): Promise<boolean> {
-    const post = await this.prisma.user.delete({
-
+    const userData = await this.prisma.siteUserData.findFirst({
       where: {
+        username: uid
+      }
+    });
 
-        siteUserDataId: Number(id),
+    if (userData == null) return false;
 
-      },
+    const deletedUser = await this.prisma.user.delete({
+      where: {
+        siteUserDataId: Number(userData.id)
+      }
+    });
 
-    })
+    const deletedUserData = await this.prisma.siteUserData.delete({
+      where: {
+        id: Number(userData.id)
+      }
+    });
 
+    return true;
   }
 }
