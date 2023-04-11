@@ -20,10 +20,25 @@ export class UserDto {
   @ApiProperty()
   readonly role: string;
 
-  constructor(id: number, username: string, password: string, info: string) {
-    this.id = id
-    this.username = username
-    this.password = password
-    this.info = info
+  constructor(
+    id: number,
+    username: string,
+    password: string,
+    name: string,
+    surname: string,
+    dateOfBirth: string,
+    role: string,
+    patronymic?: string,
+    info?: string
+  ) {
+    this.id = id;
+    this.username = username;
+    this.password = password;
+    this.name = name;
+    this.surname = surname;
+    this.dateOfBirth = dateOfBirth;
+    this.role = role;
+    this.patronymic = patronymic;
+    this.info = info;
   }
 }

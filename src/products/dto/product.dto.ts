@@ -18,11 +18,22 @@ export class ProductDto {
   @ApiProperty()
   readonly discountPercent?: number;
 
-  constructor(id: number, name: string, description: string, categories: string[], price: number, info: string) {
+  constructor(
+     id: number,
+   creatorUsername: string,
+   title: string,
+   price: number,
+   quantity: string,
+   description: string,
+   categories: string[],
+   discountPercent?: number,
+  ) {
     this.id = id;
-    this.name = name;
+    this.creatorUsername = creatorUsername;
+    this.title = title;
     this.description = description;
     this.price = price;
-    this.info = info;
+    this.categories = categories;
+    this.discountPercent = discountPercent;
   }
 }

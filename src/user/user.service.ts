@@ -1,10 +1,13 @@
-import { Injectable, NotImplementedException } from '@nestjs/common';
-import { UserDto } from './dto/user.dto';
+import { Injectable, NotImplementedException } from "@nestjs/common";
+import { UserDto } from "./dto/user.dto";
+import { PrismaService } from "../prisma.service";
+import { PrismaClient } from "@prisma/client";
 import { CreateUserRequest } from './dto/CreateUserRequest';
 import { OrderDto } from '../order/dto/order.dto';
 import { SupportRequest } from '../support/dto/supportRequest.dto';
 import { CartDto } from '../cart/dto/cart.dto';
 
+// const prisma = new PrismaClient()
 @Injectable()
 export class UserService {
 
@@ -69,8 +72,9 @@ export class UserService {
       }
     });
 
-    return true;
+    return true
   }
+
 
   getUserCart(uid: string): CartDto {
     throw new NotImplementedException();
