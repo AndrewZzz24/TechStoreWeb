@@ -1,6 +1,5 @@
-import { Injectable, NotImplementedException } from "@nestjs/common";
-import { UserDto } from "./dto/user.dto";
-import { PrismaService } from "../prisma.service";
+import { Injectable, NotImplementedException } from '@nestjs/common';
+import { UserDto } from './dto/user.dto';
 import { CreateUserRequest } from './dto/CreateUserRequest';
 import { OrderDto } from '../order/dto/order.dto';
 import { SupportRequest } from '../support/dto/supportRequest.dto';
