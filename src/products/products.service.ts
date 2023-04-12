@@ -23,12 +23,13 @@ export class ProductsService {
 
 
   async createProduct(productName: string): Promise<ProductDto> {
-    const product = await this.prisma.shopProductItem.create({
-      data: {
-        price: time,
-      }
-    });
-    return new ProductDto(product.id, product.title, product.amountOnWarehouse.toString(), [], product.price, product.createdAt.toString());
+    // const product = await this.prisma.shopProductItem.create({
+    //   data: {
+    //     price: time,
+    //   }
+    // });
+    // return new ProductDto(product.id, product.title, product.amountOnWarehouse.toString(), [], product.price, product.createdAt.toString());
+    throw new NotImplementedException()
   }
 
   deleteProduct(productId: string): Promise<boolean> {
