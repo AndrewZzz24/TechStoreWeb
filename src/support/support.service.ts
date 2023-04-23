@@ -1,6 +1,6 @@
 import { Injectable, NotImplementedException } from '@nestjs/common';
 import { SupportRequest } from './dto/supportRequest.dto';
-import { RequestSupportRequestDto } from './dto/requestSupportRequest.dto';
+import { CreateSupportRequest } from './dto/createSupportRequest';
 
 @Injectable()
 export class SupportService {
@@ -9,9 +9,8 @@ export class SupportService {
   }
 
   createRequest(
-    username: string,
-    supportRequestDto: RequestSupportRequestDto,
-  ): Promise<boolean> {
+    supportRequestDto: CreateSupportRequest,
+  ): Promise<SupportRequest> {
     throw new NotImplementedException();
   }
 

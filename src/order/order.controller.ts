@@ -1,4 +1,4 @@
-import { Get, Post, Delete, Param, Controller } from '@nestjs/common';
+import { Get, Post, Delete, Param, Controller, Body } from "@nestjs/common";
 import {
   ApiBearerAuth,
   ApiOperation,
@@ -8,6 +8,7 @@ import {
 } from '@nestjs/swagger';
 import { OrderService } from './order.service';
 import { OrderDto } from './dto/order.dto';
+import { CreateOrderRequest } from "./dto/createOrderRequest";
 
 @ApiBearerAuth()
 @ApiTags('orders')
@@ -20,24 +21,28 @@ export class OrderController {
   @ApiResponse({
     status: 200,
     description: 'The order has been successfully found.',
+    type: OrderDto,
   })
   @ApiResponse({ status: 403, description: 'Forbidden' })
   @ApiResponse({ status: 404, description: 'Not Found' })
-  @Get('get_order/:orderId')
+  @Get('/:orderId')
   async getOrder(@Param('orderId') orderId: string): Promise<OrderDto> {
     return this.orderService.getOrder(orderId);
   }
 
   @ApiOperation({ summary: 'Create order' })
-  @ApiParam({ name: 'uid', type: 'string' })
+  @ApiParam({ name: 'createOrderRequest', type: CreateOrderRequest })
   @ApiResponse({
     status: 201,
     description: 'The order has been successfully created.',
+    type: OrderDto,
   })
   @ApiResponse({ status: 403, description: 'Forbidden' })
-  @Post('create_order/:uid')
-  async createOrder(@Param(':uid') orderName: string): Promise<OrderDto> {
-    return this.orderService.createOrder(orderName);
+  @Post('create-order')
+  async createOrder(
+    @Body() createOrderRequest: CreateOrderRequest,
+  ): Promise<OrderDto> {
+    return this.orderService.createOrder(createOrderRequest);
   }
 
   @ApiOperation({ summary: 'Delete order' })
@@ -45,10 +50,11 @@ export class OrderController {
   @ApiResponse({
     status: 200,
     description: 'The order has been successfully deleted',
+    type: Boolean,
   })
   @ApiResponse({ status: 403, description: 'Forbidden' })
   @ApiResponse({ status: 404, description: 'Not Found' })
-  @Delete('delete_order/:orderId')
+  @Delete('/:orderId')
   async deleteOrder(@Param('orderId') orderId: string): Promise<boolean> {
     return this.orderService.deleteOrder(orderId);
   }

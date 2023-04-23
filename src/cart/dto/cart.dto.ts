@@ -1,16 +1,16 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-export class SupportRequest {
+export class CartDto {
   @ApiProperty()
   readonly id: number;
   @ApiProperty()
-  readonly createdAt: string;
+  readonly customerUsername: string;
   @ApiProperty()
-  readonly usernameInitiator: string;
+  readonly createAt: string;
   @ApiProperty()
-  readonly title: string;
+  readonly products: string[];
   @ApiProperty()
-  readonly message: string;
+  readonly totalPrice: number;
   @ApiProperty()
   readonly info?: string;
 }

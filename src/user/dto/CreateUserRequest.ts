@@ -1,8 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-export class UserDto {
-  @ApiProperty()
-  readonly id: number;
+export class CreateUserRequest {
   @ApiProperty()
   readonly username: string;
   @ApiProperty()
@@ -14,9 +12,9 @@ export class UserDto {
   @ApiProperty()
   readonly patronymic?: string;
   @ApiProperty()
-  readonly info: string;
-  @ApiProperty()
   readonly dateOfBirth: string;
+  @ApiProperty()
+  readonly info: string;
   @ApiProperty()
   readonly role: string;
 }
