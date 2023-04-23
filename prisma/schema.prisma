@@ -1,0 +1,120 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model SiteUserData {
+  id       Int    @id @default(autoincrement())
+  email    String @unique
+  name     String
+  username String
+  password String
+  role     String
+  Admin    Admin?
+  User     User?
+}
+
+model Admin {
+  id             Int          @id @default(autoincrement())
+  siteUserDataId Int          @unique
+  siteUserData   SiteUserData @relation(fields: [siteUserDataId], references: [id])
+}
+
+model User {
+  id                     Int                      @id @default(autoincrement())
+  cart                   Cart?
+  orders                 Order[]
+  helpDeskSupportHistory HelpDeskSupportHistory[]
+  siteUserDataId         Int                      @unique
+  siteUserData           SiteUserData             @relation(fields: [siteUserDataId], references: [id])
+}
+
+model Cart {
+  id              Int               @id @default(autoincrement())
+  createdAt       DateTime          @default(now())
+  userId          Int               @unique
+  user            User              @relation(fields: [userId], references: [id])
+  shopProductItem ShopProductItem[]
+  Order           Order?
+}
+
+model Order {
+  id              Int         @id @default(autoincrement())
+  createdAt       DateTime    @default(now())
+  moneyAmount     Float
+  currency        String
+  paymentMethodId String
+  userId          Int         @unique
+  user            User        @relation(fields: [userId], references: [id])
+  orderLines      OrderLine[]
+  Cart            Cart?       @relation(fields: [cartId], references: [id])
+  cartId          Int?        @unique
+}
+
+model OrderLine {
+  id                 Int              @id @default(autoincrement())
+  orderId            Int              @unique
+  tax                Float
+  totalAmount        Float
+  discount           Float
+  order              Order            @relation(fields: [orderId], references: [id])
+  orderProductItem   OrderProductItem @relation(fields: [orderProductItemId], references: [id])
+  orderProductItemId Int              @unique
+}
+
+model OrderProductItem {
+  id                Int        @id @default(autoincrement())
+  createdAt         DateTime   @default(now())
+  price             Float
+  amount            Int
+  title             String
+  amountOnWarehouse Int
+  OrderLine         OrderLine?
+}
+
+model ShopProductItem {
+  id                Int        @id @default(autoincrement())
+  createdAt         DateTime   @default(now())
+  price             Float
+  title             String
+  amountOnWarehouse Int
+  categories        Category[]
+  reviews           Review[]
+  Cart              Cart       @relation(fields: [cartId], references: [id])
+  cartId            Int
+}
+
+model Category {
+  id                Int             @id @default(autoincrement())
+  description       String
+  shopProductItem   ShopProductItem @relation(fields: [shopProductItemId], references: [id])
+  shopProductItemId Int
+}
+
+model Review {
+  id                Int             @id @default(autoincrement())
+  author            String
+  reviewMessage     String
+  date              DateTime
+  shopProductItem   ShopProductItem @relation(fields: [shopProductItemId], references: [id])
+  shopProductItemId Int
+}
+
+model HelpDeskSupportHistory {
+  id                 Int                          @id @default(autoincrement())
+  requestSupportDate DateTime                     @default(now())
+  topic              String
+  status             HelpDeskSupportRequestStatus
+  User               User                         @relation(fields: [userId], references: [id])
+  userId             Int
+}
+
+enum HelpDeskSupportRequestStatus {
+  CREATED
+  RESOLVED
+  CANCELED
+}
