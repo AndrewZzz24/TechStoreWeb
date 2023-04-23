@@ -1,4 +1,4 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty } from "@nestjs/swagger";
 
 export class CartDto {
   @ApiProperty()
@@ -8,9 +8,21 @@ export class CartDto {
   @ApiProperty()
   readonly createAt: string;
   @ApiProperty()
-  readonly products: string[];
+  readonly productIds: string[];
   @ApiProperty()
   readonly totalPrice: number;
-  @ApiProperty()
-  readonly info?: string;
+
+  constructor(
+    id: number,
+    customerUsername: string,
+    createAt: string,
+    productIds: string[],
+    totalPrice: number
+  ) {
+    this.id = id;
+    this.customerUsername = customerUsername;
+    this.createAt = createAt;
+    this.productIds = productIds;
+    this.totalPrice = totalPrice;
+  }
 }

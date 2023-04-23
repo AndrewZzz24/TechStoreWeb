@@ -12,6 +12,7 @@ import { CreateUserRequest } from './dto/CreateUserRequest';
 import { SupportRequest } from '../support/dto/supportRequest.dto';
 import { OrderDto } from '../order/dto/order.dto';
 import { CartDto } from '../cart/dto/cart.dto';
+import { UserRole } from "@prisma/client";
 
 @ApiBearerAuth()
 @ApiTags('users')
@@ -20,7 +21,7 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @ApiOperation({ summary: 'Get user' })
-  @ApiParam({ name: 'uid', type: 'string' })
+  @ApiParam({ name: 'username', type: 'string' })
   @ApiResponse({
     status: 200,
     description: 'The user has been successfully found.',
@@ -28,28 +29,43 @@ export class UserController {
   })
   @ApiResponse({ status: 403, description: 'Forbidden' })
   @ApiResponse({ status: 404, description: 'Not Found' })
-  @Get('/:uid')
-  async getUser(@Param('uid') username: string): Promise<UserDto> {
+  @Get('/:username')
+  async getUser(@Param('username') username: string): Promise<UserDto> {
     return this.userService.getUser(username);
   }
 
-  @ApiOperation({ summary: 'Create user' })
+  @ApiOperation({ summary: 'Create user customer' })
   @ApiParam({ name: 'createUserRequest', type: CreateUserRequest })
   @ApiResponse({
     status: 201,
-    description: 'The user has been successfully created.',
+    description: 'The user customer has been successfully created.',
     type: UserDto,
   })
   @ApiResponse({ status: 403, description: 'Forbidden' })
-  @Post('/create-user')
-  async createUser(
+  @Post('/create-customer')
+  async createCustomer(
     @Body() createUserRequest: CreateUserRequest,
   ): Promise<UserDto> {
-    return this.userService.createUser(createUserRequest);
+    return this.userService.createUser(createUserRequest, UserRole.CUSTOMER);
+  }
+
+  @ApiOperation({ summary: 'Create user admin' })
+  @ApiParam({ name: 'createUserRequest', type: CreateUserRequest })
+  @ApiResponse({
+    status: 201,
+    description: 'The user admin has been successfully created.',
+    type: UserDto,
+  })
+  @ApiResponse({ status: 403, description: 'Forbidden' })
+  @Post('/create-admin')
+  async createAdmin(
+    @Body() createUserRequest: CreateUserRequest,
+  ): Promise<UserDto> {
+    return this.userService.createUser(createUserRequest, UserRole.ADMIN);
   }
 
   @ApiOperation({ summary: 'Delete user' })
-  @ApiParam({ name: 'uid', type: 'string' })
+  @ApiParam({ name: 'username', type: 'string' })
   @ApiResponse({
     status: 200,
     description: 'The user has been successfully deleted',
@@ -57,8 +73,8 @@ export class UserController {
   })
   @ApiResponse({ status: 403, description: 'Forbidden' })
   @ApiResponse({ status: 404, description: 'Not Found' })
-  @Delete('/:uid')
-  async deleteUser(@Param('uid') username: string): Promise<boolean> {
+  @Delete('/:username')
+  async deleteUser(@Param('username') username: string): Promise<boolean> {
     return this.userService.deleteUser(username);
   }
 

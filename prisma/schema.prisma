@@ -8,12 +8,13 @@ datasource db {
 }
 
 model SiteUserData {
-  id       Int    @id @default(autoincrement())
-  email    String @unique
-  name     String
-  username String
+  id       Int      @id @default(autoincrement())
+  email    String   @unique
+  username String   @unique
   password String
-  role     String
+  name     String
+  surname  String
+  role     UserRole
   Admin    Admin?
   User     User?
 }
@@ -33,13 +34,19 @@ model User {
   siteUserData           SiteUserData             @relation(fields: [siteUserDataId], references: [id])
 }
 
+enum UserRole {
+  ADMIN
+  CUSTOMER
+}
+
 model Cart {
   id              Int               @id @default(autoincrement())
   createdAt       DateTime          @default(now())
   userId          Int               @unique
   user            User              @relation(fields: [userId], references: [id])
-  shopProductItem ShopProductItem[]
+  totalPrice      Int
   Order           Order?
+  CartProductItem CartProductItem[]
 }
 
 model Order {
@@ -76,16 +83,26 @@ model OrderProductItem {
   OrderLine         OrderLine?
 }
 
+model CartProductItem {
+  id                Int             @id @default(autoincrement())
+  createdAt         DateTime        @default(now())
+  price             Float
+  title             String
+  Cart              Cart            @relation(fields: [cartId], references: [id])
+  cartId            Int
+  shopProductItem   ShopProductItem @relation(fields: [shopProductItemId], references: [id])
+  shopProductItemId Int
+}
+
 model ShopProductItem {
-  id                Int        @id @default(autoincrement())
-  createdAt         DateTime   @default(now())
+  id                Int               @id @default(autoincrement())
+  createdAt         DateTime          @default(now())
   price             Float
   title             String
   amountOnWarehouse Int
   categories        Category[]
   reviews           Review[]
-  Cart              Cart       @relation(fields: [cartId], references: [id])
-  cartId            Int
+  CartProductItem   CartProductItem[]
 }
 
 model Category {

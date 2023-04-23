@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { ShopProductItem } from "@prisma/client";
 
 export class ProductDto {
   @ApiProperty()
@@ -36,4 +37,11 @@ export class ProductDto {
     this.categories = categories;
     this.discountPercent = discountPercent;
   }
+
+  // public fromShopProductItem(shopProductItem: ShopProductItem): ProductDto {
+  //   return new ProductDto(
+  //     id = shopProductItem.id,
+  //
+  //   )
+  // }
 }

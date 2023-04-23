@@ -1,14 +1,18 @@
 -- CreateEnum
+CREATE TYPE "UserRole" AS ENUM ('ADMIN', 'CUSTOMER');
+
+-- CreateEnum
 CREATE TYPE "HelpDeskSupportRequestStatus" AS ENUM ('CREATED', 'RESOLVED', 'CANCELED');
 
 -- CreateTable
 CREATE TABLE "SiteUserData" (
     "id" SERIAL NOT NULL,
     "email" TEXT NOT NULL,
-    "name" TEXT NOT NULL,
     "username" TEXT NOT NULL,
     "password" TEXT NOT NULL,
-    "role" TEXT NOT NULL,
+    "name" TEXT NOT NULL,
+    "surname" TEXT NOT NULL,
+    "role" "UserRole" NOT NULL,
 
     CONSTRAINT "SiteUserData_pkey" PRIMARY KEY ("id")
 );
@@ -33,8 +37,8 @@ CREATE TABLE "User" (
 CREATE TABLE "Cart" (
     "id" SERIAL NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "bio" TEXT NOT NULL,
     "userId" INTEGER NOT NULL,
+    "totalPrice" INTEGER NOT NULL,
 
     CONSTRAINT "Cart_pkey" PRIMARY KEY ("id")
 );
@@ -77,13 +81,24 @@ CREATE TABLE "OrderProductItem" (
 );
 
 -- CreateTable
+CREATE TABLE "CartProductItem" (
+    "id" SERIAL NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "price" DOUBLE PRECISION NOT NULL,
+    "title" TEXT NOT NULL,
+    "cartId" INTEGER NOT NULL,
+    "shopProductItemId" INTEGER NOT NULL,
+
+    CONSTRAINT "CartProductItem_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
 CREATE TABLE "ShopProductItem" (
     "id" SERIAL NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "price" DOUBLE PRECISION NOT NULL,
     "title" TEXT NOT NULL,
     "amountOnWarehouse" INTEGER NOT NULL,
-    "cartId" INTEGER,
 
     CONSTRAINT "ShopProductItem_pkey" PRIMARY KEY ("id")
 );
@@ -121,6 +136,9 @@ CREATE TABLE "HelpDeskSupportHistory" (
 
 -- CreateIndex
 CREATE UNIQUE INDEX "SiteUserData_email_key" ON "SiteUserData"("email");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "SiteUserData_username_key" ON "SiteUserData"("username");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Admin_siteUserDataId_key" ON "Admin"("siteUserDataId");
@@ -165,7 +183,10 @@ ALTER TABLE "OrderLine" ADD CONSTRAINT "OrderLine_orderId_fkey" FOREIGN KEY ("or
 ALTER TABLE "OrderLine" ADD CONSTRAINT "OrderLine_orderProductItemId_fkey" FOREIGN KEY ("orderProductItemId") REFERENCES "OrderProductItem"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "ShopProductItem" ADD CONSTRAINT "ShopProductItem_cartId_fkey" FOREIGN KEY ("cartId") REFERENCES "Cart"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "CartProductItem" ADD CONSTRAINT "CartProductItem_cartId_fkey" FOREIGN KEY ("cartId") REFERENCES "Cart"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "CartProductItem" ADD CONSTRAINT "CartProductItem_shopProductItemId_fkey" FOREIGN KEY ("shopProductItemId") REFERENCES "ShopProductItem"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Category" ADD CONSTRAINT "Category_shopProductItemId_fkey" FOREIGN KEY ("shopProductItemId") REFERENCES "ShopProductItem"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

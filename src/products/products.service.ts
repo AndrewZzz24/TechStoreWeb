@@ -1,9 +1,8 @@
-import { Injectable, NotImplementedException } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
 import { ProductDto } from "./dto/product.dto";
 import { PrismaService } from "../prisma.service";
-import { UserDto } from "../user/dto/user.dto";
-import { HelpDeskSupportRequestStatus } from "@prisma/client";
-import { SupportRequest } from "../support/dto/supportRequest.dto";
+import { ShopProductItem } from "@prisma/client";
+import { CreateProductRequest } from "./dto/createProductRequest";
 
 @Injectable()
 export class ProductsService {
@@ -17,25 +16,84 @@ export class ProductsService {
         id: Number(productId)
       }
     });
+    const categories = await this.prisma.category.findMany({
+      where: {
+        shopProductItemId: Number(productId)
+      }
+    });
 
-    return new ProductDto(product.id, product.title, product.amountOnWarehouse.toString(), [], product.price, product.createdAt.toString());
+    return new ProductDto(
+      product.id,
+      "sd",
+      product.title,
+      product.price,
+      product.amountOnWarehouse.toString(),
+      "",
+      categories.map(it.toString),
+      null
+    );
   }
 
-  async createProduct(productName: string): Promise<ProductDto> {
-    // const product = await this.prisma.shopProductItem.create({
-    //   data: {
-    //     price: time,
-    //   }
-    // });
-    // return new ProductDto(product.id, product.title, product.amountOnWarehouse.toString(), [], product.price, product.createdAt.toString());
-    throw new NotImplementedException()
+  async createProduct(createProductRequest: CreateProductRequest): Promise<ProductDto> {
+    const product = await this.prisma.shopProductItem.create({
+      data: {
+        price: createProductRequest.price,
+        title: createProductRequest.title,
+        amountOnWarehouse: createProductRequest.amountOnWarehouse,
+      }
+    });
+    for (const category of createProductRequest.categories) {
+      await this.prisma.category.create({
+        data: {
+          description: category.toString(),
+          shopProductItemId: product.id
+        }
+      });
+      return new ProductDto(
+        product.id,
+        "sd",
+        product.title,
+        product.price,
+        product.amountOnWarehouse.toString(),
+        "",
+        createProductRequest.categories,
+        null
+      );
+    }
   }
 
-  deleteProduct(productId: string): Promise<boolean> {
-    throw new NotImplementedException();
+  async deleteProduct(productId: string): Promise<boolean> {
+    const categories = await this.prisma.shopProductItem.delete({
+      where: {
+        id: Number(productId)
+      }
+    });
+    return categories != null;
   }
 
-  getAllAvailableProducts(): Promise<ProductDto[]> {
-    throw new NotImplementedException();
+  async getAllAvailableProducts(): Promise<ProductDto[]> {
+    const products: ShopProductItem[] = await this.prisma.shopProductItem.findMany({});
+    let result: ProductDto[] = [];
+    for (const product of products) {
+      const categories = await this.prisma.category.findMany({
+        where: {
+          shopProductItemId: Number(product.id)
+        }
+      });
+
+      result.push(
+        new ProductDto(
+          product.id,
+          "sd",
+          product.title,
+          product.price,
+          product.amountOnWarehouse.toString(),
+          "",
+          categories.map(it.toString),
+          null
+        )
+      );
+    }
+    return result;
   }
 }

@@ -1,16 +1,18 @@
 import { ApiProperty } from "@nestjs/swagger";
 
-export class OrderDto {
+export class OrderLineDto {
   @ApiProperty()
   readonly id: number;
   @ApiProperty()
+  readonly orderId: number;
+  @ApiProperty()
+  readonly tax: number;
+  @ApiProperty()
+  readonly discount: number;
+  @ApiProperty()
   readonly customerUsername: string;
   @ApiProperty()
-  readonly createAt: string;
-  @ApiProperty()
-  readonly productIds: string[];
-  @ApiProperty()
-  readonly totalPrice: number;
+  readonly productId: string[];
 
   constructor(
     id: number,

@@ -6,9 +6,9 @@ export class CreateProductRequest {
   @ApiProperty()
   readonly title: string;
   @ApiProperty()
-  readonly price: string;
+  readonly price: number;
   @ApiProperty()
-  readonly quantity: string;
+  readonly amountOnWarehouse: number;
   @ApiProperty()
   readonly description: string;
   @ApiProperty()
