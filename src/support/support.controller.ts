@@ -8,7 +8,7 @@ import {
 } from '@nestjs/swagger';
 import { SupportService } from './support.service';
 import { SupportRequest } from './dto/supportRequest.dto';
-import { RequestSupportRequestDto } from './dto/requestSupportRequest.dto';
+import { CreateSupportRequest } from './dto/createSupportRequest';
 
 @ApiBearerAuth()
 @ApiTags('support')
@@ -21,10 +21,11 @@ export class SupportController {
   @ApiResponse({
     status: 201,
     description: 'The support request has been successfully found.',
+    type: SupportRequest,
   })
   @ApiResponse({ status: 403, description: 'Forbidden' })
   @ApiResponse({ status: 404, description: 'Not Found' })
-  @Get('get_request/:requestId')
+  @Get('/:requestId')
   async getSupportRequest(
     @Param('requestId') requestId: string,
   ): Promise<SupportRequest> {
@@ -32,19 +33,19 @@ export class SupportController {
   }
 
   @ApiOperation({ summary: 'Create support request' })
-  @ApiParam({ name: 'uid', type: 'string' })
+  @ApiParam({ name: 'supportRequestDto', type: CreateSupportRequest })
   @ApiResponse({
     status: 201,
     description: 'The support request has been successfully created.',
+    type: SupportRequest,
   })
   @ApiResponse({ status: 403, description: 'Forbidden' })
   @ApiResponse({ status: 404, description: 'User Not Found' })
-  @Post('create_request/:uid')
+  @Post('/create-support-request')
   async createSupportRequest(
-    @Param('uid') username: string,
-    @Body() supportRequestDto: RequestSupportRequestDto,
+    @Body() supportRequestDto: CreateSupportRequest,
   ): Promise<SupportRequest> {
-    return this.supportService.createRequest(username, supportRequestDto);
+    return this.supportService.createRequest(supportRequestDto);
   }
 
   @ApiOperation({ summary: 'Delete support request' })
@@ -52,10 +53,11 @@ export class SupportController {
   @ApiResponse({
     status: 200,
     description: 'The support request has been successfully delete.',
+    type: Boolean,
   })
   @ApiResponse({ status: 403, description: 'Forbidden' })
   @ApiResponse({ status: 404, description: 'Not Found' })
-  @Delete('delete_request/:requestId')
+  @Delete('/:requestId')
   async deleteSupportRequest(
     @Param('requestId') requestId: string,
   ): Promise<boolean> {

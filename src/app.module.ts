@@ -8,14 +8,10 @@ import { OrderModule } from './order/order.module';
 import { ProductsModule } from './products/products.module';
 import { SupportModule } from './support/support.module';
 import { UserModule } from './user/user.module';
+import { CartModule } from './cart/cart.module';
 
 @Module({
-  imports: [
-    OrderModule,
-    ProductsModule,
-    SupportModule,
-    UserModule,
-  ],
+  imports: [CartModule, OrderModule, ProductsModule, SupportModule, UserModule],
   controllers: [AppController],
   providers: [
     {

@@ -4,11 +4,16 @@ export class SupportRequest {
   @ApiProperty()
   readonly id: number;
   @ApiProperty()
+  readonly createdAt: string;
+  @ApiProperty()
   readonly usernameInitiator: string;
   @ApiProperty()
-  title: string;
+  readonly title: string;
   @ApiProperty()
-  info: string;
+  readonly message: string;
+  @ApiProperty()
+  readonly info?: string;
+
 
   constructor(id: number, usernameInitiator: string, title: string, info: string) {
     this.id = id;
