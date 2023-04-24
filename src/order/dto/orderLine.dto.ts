@@ -8,20 +8,25 @@ export class OrderLineDto {
   @ApiProperty()
   readonly tax: number;
   @ApiProperty()
+  readonly totalAmount: number;
+  @ApiProperty()
   readonly discount: number;
   @ApiProperty()
-  readonly customerUsername: string;
-  @ApiProperty()
-  readonly productId: string[];
+  readonly orderProductId: string[];
 
   constructor(
     id: number,
-    customerUsername: string,
-    createAt: string,
-    productIds: string[],
-    totalPrice: number,
-    info?: string
+    orderId: number,
+    tax: number,
+    totalAmount: number,
+    discount: number,
+    orderProductId: string[]
   ) {
-
+    this.id = id;
+    this.orderId = orderId;
+    this.tax = tax;
+    this.totalAmount = totalAmount;
+    this.discount = discount;
+    this.orderProductId = orderProductId;
   }
 }

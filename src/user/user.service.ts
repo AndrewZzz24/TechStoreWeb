@@ -19,8 +19,8 @@ export class UserService {
   async getUser(
     username: string
   ): Promise<UserDto> {
-    const siteUserData: SiteUserData = await this.getSiteUserData(username)
-    const user: User = await this.getUserData(siteUserData)
+    const siteUserData: SiteUserData = await this.getSiteUserData(username);
+    const user: User = await this.getUserData(siteUserData);
 
     return this.toUserDto(user, siteUserData);
   }
@@ -50,7 +50,7 @@ export class UserService {
   }
 
   async deleteUser(username: string): Promise<boolean> {
-    const userData: SiteUserData = await this.getSiteUserData(username)
+    const userData: SiteUserData = await this.getSiteUserData(username);
 
     if (userData == null) return false;
 
@@ -71,7 +71,7 @@ export class UserService {
 
 
   async getUserCart(username: string): Promise<CartDto> {
-    const customerData = await this.getUser(username)
+    const customerData = await this.getUser(username);
 
     const cart = await this.prisma.cart.findUnique({
       where: {
@@ -92,17 +92,17 @@ export class UserService {
       customerData.username,
       cart.createdAt.toString(),
       cardProductItemIds,
-      cart.totalPrice,
+      cart.totalPrice
     );
   }
 
   async getUserOrders(username: string): Promise<OrderDto[]> {
-    const customerUser: UserDto = await this.getUser(username)
+    const customerUser: UserDto = await this.getUser(username);
     const orders = await this.prisma.order.findMany({
       where: {
         userId: Number(customerUser.id)
       }
-    })
+    });
 
     let result: OrderDto[] = [];
     for (const order of orders) {
@@ -114,7 +114,13 @@ export class UserService {
 
       result.push(
         new OrderDto(
-
+          order.id,
+          customerUser.username,
+          order.createdAt.toString(),
+          orderLines.map(function(value) {
+            return value.productName;
+          }),
+          order.moneyAmount
         )
       );
     }

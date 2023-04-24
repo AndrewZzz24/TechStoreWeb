@@ -48,7 +48,6 @@ CREATE TABLE "Order" (
     "id" SERIAL NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "moneyAmount" DOUBLE PRECISION NOT NULL,
-    "currency" TEXT NOT NULL,
     "paymentMethodId" TEXT NOT NULL,
     "userId" INTEGER NOT NULL,
     "cartId" INTEGER,
@@ -63,7 +62,7 @@ CREATE TABLE "OrderLine" (
     "tax" DOUBLE PRECISION NOT NULL,
     "totalAmount" DOUBLE PRECISION NOT NULL,
     "discount" DOUBLE PRECISION NOT NULL,
-    "orderProductItemId" INTEGER NOT NULL,
+    "productName" TEXT NOT NULL,
 
     CONSTRAINT "OrderLine_pkey" PRIMARY KEY ("id")
 );
@@ -76,6 +75,7 @@ CREATE TABLE "OrderProductItem" (
     "amount" INTEGER NOT NULL,
     "title" TEXT NOT NULL,
     "amountOnWarehouse" INTEGER NOT NULL,
+    "orderLineId" INTEGER NOT NULL,
 
     CONSTRAINT "OrderProductItem_pkey" PRIMARY KEY ("id")
 );
@@ -159,7 +159,7 @@ CREATE UNIQUE INDEX "Order_cartId_key" ON "Order"("cartId");
 CREATE UNIQUE INDEX "OrderLine_orderId_key" ON "OrderLine"("orderId");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "OrderLine_orderProductItemId_key" ON "OrderLine"("orderProductItemId");
+CREATE UNIQUE INDEX "OrderProductItem_orderLineId_key" ON "OrderProductItem"("orderLineId");
 
 -- AddForeignKey
 ALTER TABLE "Admin" ADD CONSTRAINT "Admin_siteUserDataId_fkey" FOREIGN KEY ("siteUserDataId") REFERENCES "SiteUserData"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -180,7 +180,7 @@ ALTER TABLE "Order" ADD CONSTRAINT "Order_cartId_fkey" FOREIGN KEY ("cartId") RE
 ALTER TABLE "OrderLine" ADD CONSTRAINT "OrderLine_orderId_fkey" FOREIGN KEY ("orderId") REFERENCES "Order"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "OrderLine" ADD CONSTRAINT "OrderLine_orderProductItemId_fkey" FOREIGN KEY ("orderProductItemId") REFERENCES "OrderProductItem"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "OrderProductItem" ADD CONSTRAINT "OrderProductItem_orderLineId_fkey" FOREIGN KEY ("orderLineId") REFERENCES "OrderLine"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "CartProductItem" ADD CONSTRAINT "CartProductItem_cartId_fkey" FOREIGN KEY ("cartId") REFERENCES "Cart"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

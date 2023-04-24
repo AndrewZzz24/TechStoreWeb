@@ -53,7 +53,6 @@ model Order {
   id              Int         @id @default(autoincrement())
   createdAt       DateTime    @default(now())
   moneyAmount     Float
-  currency        String
   paymentMethodId String
   userId          Int         @unique
   user            User        @relation(fields: [userId], references: [id])
@@ -63,24 +62,25 @@ model Order {
 }
 
 model OrderLine {
-  id                 Int              @id @default(autoincrement())
-  orderId            Int              @unique
-  tax                Float
-  totalAmount        Float
-  discount           Float
-  order              Order            @relation(fields: [orderId], references: [id])
-  orderProductItem   OrderProductItem @relation(fields: [orderProductItemId], references: [id])
-  orderProductItemId Int              @unique
+  id               Int               @id @default(autoincrement())
+  orderId          Int               @unique
+  tax              Float
+  totalAmount      Float
+  discount         Float
+  productName      String
+  order            Order             @relation(fields: [orderId], references: [id])
+  orderProductItem OrderProductItem?
 }
 
 model OrderProductItem {
-  id                Int        @id @default(autoincrement())
-  createdAt         DateTime   @default(now())
+  id                Int       @id @default(autoincrement())
+  createdAt         DateTime  @default(now())
   price             Float
   amount            Int
   title             String
   amountOnWarehouse Int
-  OrderLine         OrderLine?
+  orderLine         OrderLine @relation(fields: [orderLineId], references: [id])
+  orderLineId       Int       @unique
 }
 
 model CartProductItem {
