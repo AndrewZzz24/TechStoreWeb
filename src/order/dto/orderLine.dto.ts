@@ -12,7 +12,7 @@ export class OrderLineDto {
   @ApiProperty()
   readonly discount: number;
   @ApiProperty()
-  readonly orderProductId: string[];
+  readonly orderLineProductId: number;
 
   constructor(
     id: number,
@@ -20,13 +20,13 @@ export class OrderLineDto {
     tax: number,
     totalAmount: number,
     discount: number,
-    orderProductId: string[]
+    orderLineProductId: number
   ) {
     this.id = id;
     this.orderId = orderId;
     this.tax = tax;
     this.totalAmount = totalAmount;
     this.discount = discount;
-    this.orderProductId = orderProductId;
+    this.orderLineProductId = orderLineProductId;
   }
 }

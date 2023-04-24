@@ -4,22 +4,29 @@ export class OrderDto {
   @ApiProperty()
   readonly id: number;
   @ApiProperty()
-  readonly customerUsername: string;
-  @ApiProperty()
   readonly createAt: string;
+  @ApiProperty()
+  readonly totalPrice: number;
+  @ApiProperty()
+  readonly userId: number;
   @ApiProperty()
   readonly productIds: string[];
   @ApiProperty()
-  readonly totalPrice: number;
+  readonly cartId: number;
 
   constructor(
     id: number,
-    customerUsername: string,
     createAt: string,
-    productIds: string[],
     totalPrice: number,
-    info?: string
+    userId: number,
+    productIds: string[],
+    cartId: number
   ) {
-
+    this.id = id;
+    this.createAt = createAt;
+    this.totalPrice = totalPrice;
+    this.userId = userId;
+    this.productIds = productIds;
+    this.cartId = cartId;
   }
 }

@@ -58,4 +58,18 @@ export class OrderController {
   async deleteOrder(@Param('orderId') orderId: string): Promise<boolean> {
     return this.orderService.deleteOrder(orderId);
   }
+
+  @ApiOperation({ summary: 'Get user orders' })
+  @ApiParam({ name: 'username', type: 'string' })
+  @ApiResponse({
+    status: 200,
+    description: 'The user orders has been successfully deleted',
+    type: Array<OrderDto>,
+  })
+  @ApiResponse({ status: 403, description: 'Forbidden' })
+  @ApiResponse({ status: 404, description: 'Not Found' })
+  @Post('/get-user-orders/:username')
+  async getUserOrders(@Param('username') username: string): Promise<OrderDto[]> {
+    return this.orderService.getUserOrders(username);
+  }
 }

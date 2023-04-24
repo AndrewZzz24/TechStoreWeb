@@ -63,4 +63,20 @@ export class SupportController {
   ): Promise<boolean> {
     return this.supportService.deleteRequest(requestId);
   }
+
+  @ApiOperation({ summary: 'Get users support requests' })
+  @ApiParam({ name: 'username', type: 'string' })
+  @ApiResponse({
+    status: 200,
+    description: 'The users support requests has been successfully delete.',
+    type: Array<SupportRequest>,
+  })
+  @ApiResponse({ status: 403, description: 'Forbidden' })
+  @ApiResponse({ status: 404, description: 'Not Found' })
+  @Post('/get-user-support-requests/:username')
+  async getUserSupportRequests(
+    @Param('username') username: string,
+  ): Promise<SupportRequest[]> {
+    return this.supportService.getUserSupportRequests(username);
+  }
 }

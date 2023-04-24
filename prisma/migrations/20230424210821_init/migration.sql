@@ -38,7 +38,6 @@ CREATE TABLE "Cart" (
     "id" SERIAL NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "userId" INTEGER NOT NULL,
-    "totalPrice" INTEGER NOT NULL,
 
     CONSTRAINT "Cart_pkey" PRIMARY KEY ("id")
 );
@@ -47,8 +46,7 @@ CREATE TABLE "Cart" (
 CREATE TABLE "Order" (
     "id" SERIAL NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "moneyAmount" DOUBLE PRECISION NOT NULL,
-    "paymentMethodId" TEXT NOT NULL,
+    "totalPrice" DOUBLE PRECISION NOT NULL,
     "userId" INTEGER NOT NULL,
     "cartId" INTEGER,
 
@@ -124,14 +122,15 @@ CREATE TABLE "Review" (
 );
 
 -- CreateTable
-CREATE TABLE "HelpDeskSupportHistory" (
+CREATE TABLE "HelpDeskSupportRequest" (
     "id" SERIAL NOT NULL,
-    "requestSupportDate" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "topic" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "title" TEXT NOT NULL,
+    "message" TEXT NOT NULL,
     "status" "HelpDeskSupportRequestStatus" NOT NULL,
     "userId" INTEGER NOT NULL,
 
-    CONSTRAINT "HelpDeskSupportHistory_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "HelpDeskSupportRequest_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateIndex
@@ -195,4 +194,4 @@ ALTER TABLE "Category" ADD CONSTRAINT "Category_shopProductItemId_fkey" FOREIGN 
 ALTER TABLE "Review" ADD CONSTRAINT "Review_shopProductItemId_fkey" FOREIGN KEY ("shopProductItemId") REFERENCES "ShopProductItem"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "HelpDeskSupportHistory" ADD CONSTRAINT "HelpDeskSupportHistory_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "HelpDeskSupportRequest" ADD CONSTRAINT "HelpDeskSupportRequest_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

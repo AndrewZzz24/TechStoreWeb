@@ -1,47 +1,92 @@
 import { Injectable } from "@nestjs/common";
 import { SupportRequest } from "./dto/supportRequest.dto";
-import { RequestSupportRequestDto } from "./dto/requestSupportRequest.dto";
 import { PrismaService } from "../prisma.service";
-import { HelpDeskSupportRequestStatus } from "@prisma/client";
+import { HelpDeskSupportRequest, HelpDeskSupportRequestStatus } from "@prisma/client";
+import { UserService } from "../user/user.service";
+import { CreateSupportRequest } from "./dto/createSupportRequest";
+import { UserDto } from "../user/dto/user.dto";
+import { RuntimeException } from "@nestjs/core/errors/exceptions";
 
 @Injectable()
 export class SupportService {
 
-  constructor(private prisma: PrismaService) {
+  constructor(
+    private prisma: PrismaService,
+    private userService: UserService
+  ) {
   }
 
   async getRequest(requestId: string): Promise<SupportRequest> {
-    const supportRequest = await this.prisma.helpDeskSupportHistory.findFirst({
+    const supportRequest = await this.prisma.helpDeskSupportRequest.findFirst({
       where: {
         id: Number(requestId)
       }
     });
-    return new SupportRequest(supportRequest.id, supportRequest.userId.toString(), supportRequest.topic, supportRequest.status);
+
+    return this.toSupportRequest(supportRequest);
   }
 
   async createRequest(
-    username: string,
-    supportRequestDto: RequestSupportRequestDto
+    createSupportRequest: CreateSupportRequest
   ): Promise<SupportRequest> {
+    if (!this.validateRequest(createSupportRequest)) {
+      throw new RuntimeException("invalid request input");
+    }
+    const user = await this.userService.getUser(createSupportRequest.customerUsername)
     const time = new Date().toISOString();
-    const siteUserData = await this.prisma.helpDeskSupportHistory.create({
+    const supportRequestDb = await this.prisma.helpDeskSupportRequest.create({
       data: {
-        requestSupportDate: time,
-        topic: supportRequestDto.title,
+        createdAt: time,
+        title: createSupportRequest.title,
+        message: createSupportRequest.message,
         status: HelpDeskSupportRequestStatus.CREATED,
-        userId: supportRequestDto.id
+        userId: user.id
       }
     });
-    return new SupportRequest(siteUserData.id, siteUserData.userId.toString(), siteUserData.topic, siteUserData.status);
+    return this.toSupportRequest(supportRequestDb);
   }
 
   async deleteRequest(requestId: string): Promise<boolean> {
-    const deletedUser = await this.prisma.helpDeskSupportHistory.delete({
+    const deletedSupportRequest = await this.prisma.helpDeskSupportRequest.delete({
       where: {
         id: Number(requestId)
       }
     });
 
-    return deletedUser != null;
+    return deletedSupportRequest != null;
+  }
+
+  async getUserSupportRequests(username: string): Promise<SupportRequest[]> {
+    const customerUser: UserDto = await this.userService.getUser(username);
+    const supportRequests = await this.prisma.helpDeskSupportRequest.findMany({
+      where: {
+        userId: Number(customerUser.id)
+      }
+    });
+    return supportRequests.map(function(value) {
+      return new SupportRequest(
+        value.id,
+        value.createdAt.toString(),
+        value.userId,
+        value.title,
+        value.message,
+        value.status
+      );
+    });
+  }
+
+  private toSupportRequest(value: HelpDeskSupportRequest): SupportRequest {
+    return new SupportRequest(
+      value.id,
+      value.createdAt.toString(),
+      value.userId,
+      value.title,
+      value.message,
+      value.status
+    );
+  }
+
+  private validateRequest(createSupportRequest: CreateSupportRequest): boolean {
+    return true;
   }
 }

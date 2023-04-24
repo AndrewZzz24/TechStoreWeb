@@ -1,4 +1,4 @@
-import { Injectable, NotImplementedException } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
 import { UserDto } from "./dto/user.dto";
 import { PrismaService } from "../prisma.service";
 import { SiteUserData, User, UserRole } from "@prisma/client";
@@ -7,20 +7,26 @@ import { OrderDto } from "../order/dto/order.dto";
 import { SupportRequest } from "../support/dto/supportRequest.dto";
 import { CartDto } from "../cart/dto/cart.dto";
 import { RuntimeException } from "@nestjs/core/errors/exceptions";
-import { ProductDto } from "../products/dto/product.dto";
+import { SupportService } from "../support/support.service";
+import { OrderService } from "../order/order.service";
+import { CartService } from "../cart/cart.service";
 
-// const prisma = new PrismaClient()
 @Injectable()
 export class UserService {
 
-  constructor(private prisma: PrismaService) {
+  constructor(
+    private prisma: PrismaService,
+    private supportService: SupportService,
+    private orderService: OrderService,
+    private cartService: CartService
+  ) {
   }
 
   async getUser(
     username: string
   ): Promise<UserDto> {
-    const siteUserData: SiteUserData = await this.getSiteUserData(username);
-    const user: User = await this.getUserData(siteUserData);
+    const siteUserData: SiteUserData = await this.getSiteUserDataByUsername(username);
+    const user: User = await this.getUserBySiteUserData(siteUserData);
 
     return this.toUserDto(user, siteUserData);
   }
@@ -50,7 +56,7 @@ export class UserService {
   }
 
   async deleteUser(username: string): Promise<boolean> {
-    const userData: SiteUserData = await this.getSiteUserData(username);
+    const userData: SiteUserData = await this.getSiteUserDataByUsername(username);
 
     if (userData == null) return false;
 
@@ -69,66 +75,32 @@ export class UserService {
     return deletedUser != null && deletedUserData != null;
   }
 
-
   async getUserCart(username: string): Promise<CartDto> {
-    const customerData = await this.getUser(username);
-
-    const cart = await this.prisma.cart.findUnique({
-      where: {
-        userId: Number(customerData.id)
-      }
-    });
-
-    const cardProductItemIds = (await this.prisma.cartProductItem.findMany({
-      where: {
-        cartId: Number(cart.id)
-      }
-    })).map(function(value) {
-      return value.id.toString();
-    });
-
-    return new CartDto(
-      cart.id,
-      customerData.username,
-      cart.createdAt.toString(),
-      cardProductItemIds,
-      cart.totalPrice
-    );
+    return this.cartService.getUserCart(username);
   }
 
   async getUserOrders(username: string): Promise<OrderDto[]> {
-    const customerUser: UserDto = await this.getUser(username);
-    const orders = await this.prisma.order.findMany({
-      where: {
-        userId: Number(customerUser.id)
-      }
-    });
-
-    let result: OrderDto[] = [];
-    for (const order of orders) {
-      const orderLines = await this.prisma.orderLine.findMany({
-        where: {
-          orderId: Number(order.id)
-        }
-      });
-
-      result.push(
-        new OrderDto(
-          order.id,
-          customerUser.username,
-          order.createdAt.toString(),
-          orderLines.map(function(value) {
-            return value.productName;
-          }),
-          order.moneyAmount
-        )
-      );
-    }
-    return result;
+    return this.orderService.getUserOrders(username);
   }
 
-  getUserSupportRequests(username: string): SupportRequest[] {
-    throw new NotImplementedException();
+  async getUserSupportRequests(username: string): Promise<SupportRequest[]> {
+    return this.supportService.getUserSupportRequests(username);
+  }
+
+  async getSiteUserDataByUsername(username: string): Promise<SiteUserData> {
+    return this.prisma.siteUserData.findUnique({
+      where: {
+        username: username
+      }
+    });
+  }
+
+  async getUserBySiteUserData(siteUserData: SiteUserData): Promise<User> {
+    return this.prisma.user.findUnique({
+      where: {
+        siteUserDataId: Number(siteUserData.id)
+      }
+    });
   }
 
   private toUserDto(user: User, siteUserData: SiteUserData): UserDto {
@@ -141,22 +113,6 @@ export class UserService {
       siteUserData.surname,
       siteUserData.role
     );
-  }
-
-  private async getSiteUserData(username: string): Promise<SiteUserData> {
-    return this.prisma.siteUserData.findUnique({
-      where: {
-        username: username
-      }
-    });
-  }
-
-  private async getUserData(siteUserData: SiteUserData): Promise<User> {
-    return this.prisma.user.findUnique({
-      where: {
-        siteUserDataId: Number(siteUserData.id)
-      }
-    });
   }
 
   private validateRequest(createUserRequest: CreateUserRequest): boolean {
