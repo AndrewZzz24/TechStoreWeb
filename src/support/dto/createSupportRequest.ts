@@ -7,6 +7,4 @@ export class CreateSupportRequest {
   readonly title: string;
   @ApiProperty()
   readonly message: string;
-  @ApiProperty()
-  readonly info?: string;
 }

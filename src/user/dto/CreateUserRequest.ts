@@ -11,6 +11,4 @@ export class CreateUserRequest {
   readonly name: string;
   @ApiProperty()
   readonly surname: string;
-  @ApiProperty()
-  readonly role: string;
 }

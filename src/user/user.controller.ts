@@ -1,81 +1,95 @@
-import { Get, Post, Delete, Param, Controller, Body } from '@nestjs/common';
+import { Get, Post, Delete, Param, Controller, Body, ConsoleLogger } from "@nestjs/common";
 import {
   ApiBearerAuth,
   ApiOperation,
   ApiParam,
   ApiResponse,
-  ApiTags,
-} from '@nestjs/swagger';
-import { UserDto } from './dto/user.dto';
-import { UserService } from './user.service';
-import { CreateUserRequest } from './dto/CreateUserRequest';
-import { SupportRequest } from '../support/dto/supportRequest.dto';
-import { OrderDto } from '../order/dto/order.dto';
-import { CartDto } from '../cart/dto/cart.dto';
-import { UserRole } from "@prisma/client";
+  ApiTags
+} from "@nestjs/swagger";
+import { UserDto } from "./dto/user.dto";
+import { UserService } from "./user.service";
+import { CreateUserRequest } from "./dto/CreateUserRequest";
+import { SupportRequest } from "../support/dto/supportRequest.dto";
+import { OrderDto } from "../order/dto/order.dto";
+import { CartDto } from "../cart/dto/cart.dto";
+import { User, UserRole } from "@prisma/client";
+import { AuthRequest } from "./dto/authRequest";
 
 @ApiBearerAuth()
-@ApiTags('users')
-@Controller('users')
+@ApiTags("users")
+@Controller("users")
 export class UserController {
-  constructor(private readonly userService: UserService) {}
+  constructor(private readonly userService: UserService) {
+  }
 
-  @ApiOperation({ summary: 'Get user' })
-  @ApiParam({ name: 'username', type: 'string' })
+  @ApiOperation({ summary: "Get user" })
+  @ApiParam({ name: "username", type: "string" })
   @ApiResponse({
     status: 200,
-    description: 'The user has been successfully found.',
-    type: UserDto,
+    description: "The user has been successfully found.",
+    type: UserDto
   })
-  @ApiResponse({ status: 403, description: 'Forbidden' })
-  @ApiResponse({ status: 404, description: 'Not Found' })
-  @Get('/:username')
-  async getUser(@Param('username') username: string): Promise<UserDto> {
+  @ApiResponse({ status: 403, description: "Forbidden" })
+  @ApiResponse({ status: 404, description: "Not Found" })
+  @Get("/:username")
+  async getUser(@Param("username") username: string): Promise<UserDto> {
     return this.userService.getUser(username);
   }
 
-  @ApiOperation({ summary: 'Create user customer' })
-  @ApiParam({ name: 'createUserRequest', type: CreateUserRequest })
+  @ApiOperation({ summary: "Create user customer" })
   @ApiResponse({
     status: 201,
-    description: 'The user customer has been successfully created.',
-    type: UserDto,
+    description: "The user customer has been successfully created.",
+    type: UserDto
   })
-  @ApiResponse({ status: 403, description: 'Forbidden' })
-  @Post('/create-customer')
+  @ApiResponse({ status: 403, description: "Forbidden" })
+  @Post("/create-customer")
   async createCustomer(
-    @Body() createUserRequest: CreateUserRequest,
+    @Body() createUserRequest: CreateUserRequest
   ): Promise<UserDto> {
     return this.userService.createUser(createUserRequest, UserRole.CUSTOMER);
   }
 
-  @ApiOperation({ summary: 'Create user admin' })
-  @ApiParam({ name: 'createUserRequest', type: CreateUserRequest })
+  @ApiOperation({ summary: "Create user admin" })
+  @ApiParam({ name: "createUserRequest", type: CreateUserRequest })
   @ApiResponse({
     status: 201,
-    description: 'The user admin has been successfully created.',
-    type: UserDto,
+    description: "The user admin has been successfully created.",
+    type: UserDto
   })
-  @ApiResponse({ status: 403, description: 'Forbidden' })
-  @Post('/create-admin')
+  @ApiResponse({ status: 403, description: "Forbidden" })
+  @Post("/create-admin")
   async createAdmin(
-    @Body() createUserRequest: CreateUserRequest,
+    @Body() createUserRequest: CreateUserRequest
   ): Promise<UserDto> {
     return this.userService.createUser(createUserRequest, UserRole.ADMIN);
   }
 
-  @ApiOperation({ summary: 'Delete user' })
-  @ApiParam({ name: 'username', type: 'string' })
+  @ApiOperation({ summary: "Delete user" })
+  @ApiParam({ name: "username", type: "string" })
   @ApiResponse({
     status: 200,
-    description: 'The user has been successfully deleted',
-    type: Boolean,
+    description: "The user has been successfully deleted",
+    type: Boolean
   })
-  @ApiResponse({ status: 403, description: 'Forbidden' })
-  @ApiResponse({ status: 404, description: 'Not Found' })
-  @Delete('/:username')
-  async deleteUser(@Param('username') username: string): Promise<boolean> {
+  @ApiResponse({ status: 403, description: "Forbidden" })
+  @ApiResponse({ status: 404, description: "Not Found" })
+  @Delete("/:username")
+  async deleteUser(@Param("username") username: string): Promise<boolean> {
     return this.userService.deleteUser(username);
+  }
+
+  @ApiOperation({ summary: "Auth user" })
+  @ApiResponse({
+    status: 200,
+    description: "The user has been successfully authorised",
+    type: UserDto
+  })
+  @ApiResponse({ status: 403, description: "Forbidden" })
+  @ApiResponse({ status: 404, description: "Not Found" })
+  @Post("/auth")
+  async auth(@Body() authRequest: AuthRequest): Promise<UserDto> {
+    return this.userService.auth(authRequest);
   }
 
   // @ApiOperation({ summary: 'Get user`s cart' })

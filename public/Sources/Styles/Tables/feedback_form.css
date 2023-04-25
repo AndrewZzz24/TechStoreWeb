@@ -90,7 +90,7 @@
     border-width: 1px;
     border-style: solid;
     border-color: beige;
-    grid-template-columns: 1fr 1fr 4fr
+    grid-template-columns: 1fr 1fr 4fr 1fr
 }
 
 .grid-from-table-body {
