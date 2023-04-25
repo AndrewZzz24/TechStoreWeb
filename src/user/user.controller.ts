@@ -78,47 +78,47 @@ export class UserController {
     return this.userService.deleteUser(username);
   }
 
-  @ApiOperation({ summary: 'Get user`s cart' })
-  @ApiParam({ name: 'uid', type: 'string' })
-  @ApiResponse({
-    status: 200,
-    description: 'The user`s cart has been successfully found.',
-    type: CartDto,
-  })
-  @ApiResponse({ status: 403, description: 'Forbidden' })
-  @ApiResponse({ status: 404, description: 'Not Found' })
-  @Get('/:uid/cart')
-  async getUserCart(@Param('uid') username: string): Promise<CartDto> {
-    return this.userService.getUserCart(username);
-  }
-
-  @ApiOperation({ summary: 'Get user`s orders' })
-  @ApiParam({ name: 'uid', type: 'string' })
-  @ApiResponse({
-    status: 200,
-    description: 'The user`s orders has been successfully found.',
-    type: Array<OrderDto>,
-  })
-  @ApiResponse({ status: 403, description: 'Forbidden' })
-  @ApiResponse({ status: 404, description: 'Not Found' })
-  @Get('/:uid/orders')
-  async getUserOrders(@Param('uid') username: string): Promise<OrderDto[]> {
-    return this.userService.getUserOrders(username);
-  }
-
-  @ApiOperation({ summary: 'Get user`s support requests' })
-  @ApiParam({ name: 'uid', type: 'string' })
-  @ApiResponse({
-    status: 200,
-    description: 'The user`s support requests has been successfully found.',
-    type: Array<SupportRequest>,
-  })
-  @ApiResponse({ status: 403, description: 'Forbidden' })
-  @ApiResponse({ status: 404, description: 'Not Found' })
-  @Get('/:uid/support-requests')
-  async getUserSupportRequests(
-    @Param('uid') username: string,
-  ): Promise<SupportRequest[]> {
-    return this.userService.getUserSupportRequests(username);
-  }
+  // @ApiOperation({ summary: 'Get user`s cart' })
+  // @ApiParam({ name: 'uid', type: 'string' })
+  // @ApiResponse({
+  //   status: 200,
+  //   description: 'The user`s cart has been successfully found.',
+  //   type: CartDto,
+  // })
+  // @ApiResponse({ status: 403, description: 'Forbidden' })
+  // @ApiResponse({ status: 404, description: 'Not Found' })
+  // @Get('/:uid/cart')
+  // async getUserCart(@Param('uid') username: string): Promise<CartDto> {
+  //   return this.userService.getUserCart(username);
+  // }
+  //
+  // @ApiOperation({ summary: 'Get user`s orders' })
+  // @ApiParam({ name: 'uid', type: 'string' })
+  // @ApiResponse({
+  //   status: 200,
+  //   description: 'The user`s orders has been successfully found.',
+  //   type: Array<OrderDto>,
+  // })
+  // @ApiResponse({ status: 403, description: 'Forbidden' })
+  // @ApiResponse({ status: 404, description: 'Not Found' })
+  // @Get('/:uid/orders')
+  // async getUserOrders(@Param('uid') username: string): Promise<OrderDto[]> {
+  //   return this.userService.getUserOrders(username);
+  // }
+  //
+  // @ApiOperation({ summary: 'Get user`s support requests' })
+  // @ApiParam({ name: 'uid', type: 'string' })
+  // @ApiResponse({
+  //   status: 200,
+  //   description: 'The user`s support requests has been successfully found.',
+  //   type: Array<SupportRequest>,
+  // })
+  // @ApiResponse({ status: 403, description: 'Forbidden' })
+  // @ApiResponse({ status: 404, description: 'Not Found' })
+  // @Get('/:uid/support-requests')
+  // async getUserSupportRequests(
+  //   @Param('uid') username: string,
+  // ): Promise<SupportRequest[]> {
+  //   return this.userService.getUserSupportRequests(username);
+  // }
 }

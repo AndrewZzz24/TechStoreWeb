@@ -2,19 +2,13 @@ import { Injectable } from "@nestjs/common";
 import { SupportRequest } from "./dto/supportRequest.dto";
 import { PrismaService } from "../prisma.service";
 import { HelpDeskSupportRequest, HelpDeskSupportRequestStatus } from "@prisma/client";
-import { UserService } from "../user/user.service";
 import { CreateSupportRequest } from "./dto/createSupportRequest";
-import { UserDto } from "../user/dto/user.dto";
 import { RuntimeException } from "@nestjs/core/errors/exceptions";
 
 @Injectable()
 export class SupportService {
 
-  constructor(
-    private prisma: PrismaService,
-    private userService: UserService
-  ) {
-  }
+  constructor(private prisma: PrismaService) {}
 
   async getRequest(requestId: string): Promise<SupportRequest> {
     const supportRequest = await this.prisma.helpDeskSupportRequest.findFirst({
@@ -32,7 +26,6 @@ export class SupportService {
     if (!this.validateRequest(createSupportRequest)) {
       throw new RuntimeException("invalid request input");
     }
-    const user = await this.userService.getUser(createSupportRequest.customerUsername)
     const time = new Date().toISOString();
     const supportRequestDb = await this.prisma.helpDeskSupportRequest.create({
       data: {
@@ -40,7 +33,7 @@ export class SupportService {
         title: createSupportRequest.title,
         message: createSupportRequest.message,
         status: HelpDeskSupportRequestStatus.CREATED,
-        userId: user.id
+        userId: createSupportRequest.userId,
       }
     });
     return this.toSupportRequest(supportRequestDb);
@@ -56,11 +49,10 @@ export class SupportService {
     return deletedSupportRequest != null;
   }
 
-  async getUserSupportRequests(username: string): Promise<SupportRequest[]> {
-    const customerUser: UserDto = await this.userService.getUser(username);
+  async getUserSupportRequests(userId: string): Promise<SupportRequest[]> {
     const supportRequests = await this.prisma.helpDeskSupportRequest.findMany({
       where: {
-        userId: Number(customerUser.id)
+        userId: Number(userId)
       }
     });
     return supportRequests.map(function(value) {

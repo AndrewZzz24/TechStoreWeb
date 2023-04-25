@@ -1,17 +1,15 @@
 import { Injectable } from "@nestjs/common";
 import { CartDto } from "./dto/cart.dto";
 import { CreateCartRequest } from "./dto/createCartRequest";
-import { PrismaService } from "../prisma.service";
-import { UserService } from "../user/user.service";
 import { Cart } from "@prisma/client";
 import { RuntimeException } from "@nestjs/core/errors/exceptions";
+import { PrismaService } from "../prisma.service";
 
 @Injectable()
 export class CartService {
 
   constructor(
     private prisma: PrismaService,
-    private userService: UserService
   ) {
   }
 
@@ -35,12 +33,11 @@ export class CartService {
       throw new RuntimeException("invalid request input");
     }
 
-    const user = await this.userService.getUser(createCartRequest.customerUsername)
     const time = new Date().toISOString();
     const cart = await this.prisma.cart.create({
       data: {
         createdAt: time,
-        userId: user.id
+        userId: createCartRequest.userId
       }
     });
     return this.toCartDto(cart, []);
@@ -56,12 +53,10 @@ export class CartService {
     return deletedCart != null;
   }
 
-  async getUserCart(username: string): Promise<CartDto> {
-    const customerData = await this.userService.getUser(username);
-
+  async getUserCart(userId: string): Promise<CartDto> {
     const cart = await this.prisma.cart.findUnique({
       where: {
-        userId: Number(customerData.id)
+        userId: Number(userId)
       }
     });
 

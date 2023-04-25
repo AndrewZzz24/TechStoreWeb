@@ -3,7 +3,7 @@ import { OrderLineDto } from "./orderLine.dto";
 
 export class CreateOrderRequest {
   @ApiProperty()
-  readonly customerUsername: string;
+  readonly userId: number;
   @ApiProperty()
   readonly orderLines: OrderLineDto[];
   @ApiProperty()

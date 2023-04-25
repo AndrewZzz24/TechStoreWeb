@@ -7,15 +7,12 @@ import { UserService } from "../user/user.service";
 import { Order, OrderLine } from "@prisma/client";
 import { RuntimeException } from "@nestjs/core/errors/exceptions";
 import { ProductsService } from "../products/products.service";
+import { ProductDto } from "../products/dto/product.dto";
 
 @Injectable()
 export class OrderService {
 
-  constructor(
-    private prisma: PrismaService,
-    private userService: UserService,
-    private productService: ProductsService
-  ) {
+  constructor(private prisma: PrismaService) {
   }
 
   async getOrder(orderId: string): Promise<OrderDto> {
@@ -38,10 +35,9 @@ export class OrderService {
       throw new RuntimeException("invalid request input");
     }
 
-    const user = await this.userService.getUser(createOrderRequest.customerUsername);
     const createdOrderLines: OrderLine[] = [];
     for (const orderLine of createOrderRequest.orderLines) {
-      const product = await this.productService.getProduct(orderLine.orderLineProductId.toString());
+      const product = await this.getProduct(orderLine.orderLineProductId.toString());
       createdOrderLines.push(await this.prisma.orderLine.create({
         data: {
           orderId: orderLine.orderId,
@@ -59,7 +55,7 @@ export class OrderService {
         createdAt: time,
         totalPrice: createOrderRequest.totalPrice,
         cartId: createOrderRequest.cartId,
-        userId: user.id
+        userId: createOrderRequest.userId,
       }
     });
     return this.toOrderDto(order, createdOrderLines);
@@ -75,11 +71,10 @@ export class OrderService {
     return deletedUser != null;
   }
 
-  async getUserOrders(username: string): Promise<OrderDto[]> {
-    const customerUser: UserDto = await this.userService.getUser(username);
+  async getUserOrders(userId: string): Promise<OrderDto[]> {
     const orders = await this.prisma.order.findMany({
       where: {
-        userId: Number(customerUser.id)
+        userId: Number(userId)
       }
     });
 
@@ -106,6 +101,30 @@ export class OrderService {
         return value.productName;
       }),
       order.cartId
+    );
+  }
+
+  private async getProduct(productId: string): Promise<ProductDto> {
+    const product = await this.prisma.shopProductItem.findFirst({
+      where: {
+        id: Number(productId)
+      }
+    });
+    const categories = await this.prisma.category.findMany({
+      where: {
+        shopProductItemId: Number(productId)
+      }
+    });
+
+    return new ProductDto(
+      product.id,
+      "sd",
+      product.title,
+      product.price,
+      product.amountOnWarehouse.toString(),
+      "",
+      categories.map(it.toString),
+      null
     );
   }
 

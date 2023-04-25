@@ -2,7 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateSupportRequest {
   @ApiProperty()
-  readonly customerUsername: string;
+  readonly userId: number;
   @ApiProperty()
   readonly title: string;
   @ApiProperty()

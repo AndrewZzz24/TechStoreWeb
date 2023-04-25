@@ -9,9 +9,16 @@ import { ProductsModule } from './products/products.module';
 import { SupportModule } from './support/support.module';
 import { UserModule } from './user/user.module';
 import { CartModule } from './cart/cart.module';
+import { PrismaService } from "./prisma.service";
 
 @Module({
-  imports: [CartModule, OrderModule, ProductsModule, SupportModule, UserModule],
+  imports: [
+    CartModule,
+    OrderModule,
+    ProductsModule,
+    SupportModule,
+    UserModule
+  ],
   controllers: [AppController],
   providers: [
     {

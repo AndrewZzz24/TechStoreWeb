@@ -14,13 +14,7 @@ import { CartService } from "../cart/cart.service";
 @Injectable()
 export class UserService {
 
-  constructor(
-    private prisma: PrismaService,
-    private supportService: SupportService,
-    private orderService: OrderService,
-    private cartService: CartService
-  ) {
-  }
+  constructor(private prisma: PrismaService) {}
 
   async getUser(
     username: string
@@ -75,17 +69,17 @@ export class UserService {
     return deletedUser != null && deletedUserData != null;
   }
 
-  async getUserCart(username: string): Promise<CartDto> {
-    return this.cartService.getUserCart(username);
-  }
-
-  async getUserOrders(username: string): Promise<OrderDto[]> {
-    return this.orderService.getUserOrders(username);
-  }
-
-  async getUserSupportRequests(username: string): Promise<SupportRequest[]> {
-    return this.supportService.getUserSupportRequests(username);
-  }
+  // async getUserCart(username: string): Promise<CartDto> {
+  //   return this.cartService.getUserCart(username);
+  // }
+  //
+  // async getUserOrders(username: string): Promise<OrderDto[]> {
+  //   return this.orderService.getUserOrders(username);
+  // }
+  //
+  // async getUserSupportRequests(username: string): Promise<SupportRequest[]> {
+  //   return this.supportService.getUserSupportRequests(username);
+  // }
 
   async getSiteUserDataByUsername(username: string): Promise<SiteUserData> {
     return this.prisma.siteUserData.findUnique({
