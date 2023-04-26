@@ -31,7 +31,6 @@ export class OrderController {
   }
 
   @ApiOperation({ summary: 'Create order' })
-  @ApiParam({ name: 'createOrderRequest', type: CreateOrderRequest })
   @ApiResponse({
     status: 201,
     description: 'The order has been successfully created.',
@@ -59,17 +58,17 @@ export class OrderController {
     return this.orderService.deleteOrder(orderId);
   }
 
-  @ApiOperation({ summary: 'Get user orders' })
-  @ApiParam({ name: 'username', type: 'string' })
-  @ApiResponse({
-    status: 200,
-    description: 'The user orders has been successfully deleted',
-    type: Array<OrderDto>,
-  })
-  @ApiResponse({ status: 403, description: 'Forbidden' })
-  @ApiResponse({ status: 404, description: 'Not Found' })
-  @Post('/get-user-orders/:username')
-  async getUserOrders(@Param('username') username: string): Promise<OrderDto[]> {
-    return this.orderService.getUserOrders(username);
-  }
+  // @ApiOperation({ summary: 'Get user orders' })
+  // @ApiParam({ name: 'username', type: 'string' })
+  // @ApiResponse({
+  //   status: 200,
+  //   description: 'The user orders has been successfully deleted',
+  //   type: Array<OrderDto>,
+  // })
+  // @ApiResponse({ status: 403, description: 'Forbidden' })
+  // @ApiResponse({ status: 404, description: 'Not Found' })
+  // @Post('/get-user-orders/:username')
+  // async getUserOrders(@Param('username') username: string): Promise<OrderDto[]> {
+  //   return this.orderService.getUserOrders(username);
+  // }
 }

@@ -31,7 +31,6 @@ export class CartController {
   }
 
   @ApiOperation({ summary: 'Create cart' })
-  @ApiParam({ name: 'createOrderRequest', type: CreateCartRequest })
   @ApiResponse({
     status: 201,
     description: 'The cart has been successfully created.',
@@ -59,17 +58,17 @@ export class CartController {
     return this.cartService.deleteCart(cartId);
   }
 
-  @ApiOperation({ summary: 'Get user cart' })
-  @ApiParam({ name: 'userId', type: 'string' })
-  @ApiResponse({
-    status: 200,
-    description: 'The user cart has been successfully found',
-    type: Boolean,
-  })
-  @ApiResponse({ status: 403, description: 'Forbidden' })
-  @ApiResponse({ status: 404, description: 'Not Found' })
-  @Get('/get-user-cart/:userId')
-  async getUserCart(@Param('userId') cartId: string): Promise<CartDto> {
-    return this.cartService.getUserCart(cartId);
-  }
+  // @ApiOperation({ summary: 'Get user cart' })
+  // @ApiParam({ name: 'userId', type: 'string' })
+  // @ApiResponse({
+  //   status: 200,
+  //   description: 'The user cart has been successfully found',
+  //   type: Boolean,
+  // })
+  // @ApiResponse({ status: 403, description: 'Forbidden' })
+  // @ApiResponse({ status: 404, description: 'Not Found' })
+  // @Get('/get-user-cart/:userId')
+  // async getUserCart(@Param('userId') cartId: string): Promise<CartDto> {
+  //   return this.cartService.getUserCart(cartId);
+  // }
 }

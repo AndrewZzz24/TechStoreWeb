@@ -1,30 +1,42 @@
 import { Injectable } from "@nestjs/common";
 import { UserDto } from "./dto/user.dto";
 import { PrismaService } from "../prisma.service";
-import { SiteUserData, User, UserRole } from "@prisma/client";
+import {Cart, Order, SiteUserData, User, UserRole} from "@prisma/client";
 import { CreateUserRequest } from "./dto/CreateUserRequest";
 import { AuthRequest } from "./dto/authRequest";
+import {SupportService} from "../support/support.service";
+import {SupportRequest} from "../support/dto/supportRequest.dto";
+import {OrderService} from "../order/order.service";
+import {OrderDto} from "../order/dto/order.dto";
+import {CartService} from "../cart/cart.service";
+import {CartDto} from "../cart/dto/cart.dto";
 
 @Injectable()
 export class UserService {
 
-  constructor(private prisma: PrismaService) {
+  constructor(
+      private prisma: PrismaService,
+      private supportService: SupportService,
+      private orderService: OrderService,
+      private cartService: CartService,
+      ) {
   }
 
   async getUser(
     username: string
   ): Promise<UserDto> {
     const siteUserData: SiteUserData = await this.getSiteUserDataByUsername(username);
+    let t = await this.supportService.getRequest("1");
+    console.log(t);
     if (siteUserData == null) return null;
     const user: User = await this.getUserBySiteUserData(siteUserData);
-
     return this.toUserDto(user, siteUserData);
   }
 
   async createUser(createUserRequest: CreateUserRequest, role: UserRole): Promise<UserDto> {
-    if (!this.validateRequest(createUserRequest)) {
-      return null;
-    }
+    // if (!this.validateRequest(createUserRequest)) {
+    //   return null;
+    // }
     if (await this.getSiteUserDataByUsername(createUserRequest.username) !== null || await this.getSiteUserDataByEmail(createUserRequest.email) !== null) {
       alert("User with this email or username already exists");
       return null;
@@ -99,6 +111,18 @@ export class UserService {
         siteUserDataId: Number(siteUserData.id)
       }
     });
+  }
+
+  async getUserCart(username: string): Promise<CartDto> {
+    return this.cartService.getUserCart(username);
+  }
+  //
+  async getUserOrders(username: string): Promise<OrderDto[]> {
+    return this.orderService.getUserOrders(username);
+  }
+  //
+  async getUserSupportRequests(username: string): Promise<SupportRequest[]> {
+    return this.supportService.getUserSupportRequests(username);
   }
 
   private toUserDto(user: User, siteUserData: SiteUserData): UserDto {

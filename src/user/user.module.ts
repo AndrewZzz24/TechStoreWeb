@@ -9,7 +9,7 @@ import { OrderService } from "../order/order.service";
 @Module({
   imports: [],
   controllers: [UserController],
-  providers: [UserService, PrismaService]
+  providers: [UserService, PrismaService, SupportService, OrderService, CartService]
 })
 export class UserModule {
 }

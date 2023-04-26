@@ -24,7 +24,6 @@ export class ProductsController {
   }
 
   @ApiOperation({ summary: 'Create product' })
-  @ApiParam({ name: 'createProductRequest', type: CreateProductRequest })
   @ApiResponse({
     status: 201,
     description: 'The product has been successfully created.',
@@ -56,11 +55,11 @@ export class ProductsController {
   @ApiResponse({
     status: 200,
     description: 'The product has been successfully found.',
-    type: Array<ProductDto>,
+    type: [ProductDto],
   })
   @ApiResponse({ status: 403, description: 'Forbidden' })
   @ApiResponse({ status: 404, description: 'Not Found' })
-  @Get('/get-all-available-products')
+  @Get()
   async getAllProducts(): Promise<ProductDto[]> {
     return this.productsService.getAllAvailableProducts();
   }
