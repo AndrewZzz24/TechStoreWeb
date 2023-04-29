@@ -1,46 +1,42 @@
-import { Injectable } from "@nestjs/common";
+import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { UserDto } from "./dto/user.dto";
 import { PrismaService } from "../prisma.service";
-import {Cart, Order, SiteUserData, User, UserRole} from "@prisma/client";
+import { Cart, Order, SiteUserData, User, UserRole } from "@prisma/client";
 import { CreateUserRequest } from "./dto/CreateUserRequest";
 import { AuthRequest } from "./dto/authRequest";
-import {SupportService} from "../support/support.service";
-import {SupportRequest} from "../support/dto/supportRequest.dto";
-import {OrderService} from "../order/order.service";
-import {OrderDto} from "../order/dto/order.dto";
-import {CartService} from "../cart/cart.service";
-import {CartDto} from "../cart/dto/cart.dto";
+import { SupportService } from "../support/support.service";
+import { SupportRequest } from "../support/dto/supportRequest.dto";
+import { OrderService } from "../order/order.service";
+import { OrderDto } from "../order/dto/order.dto";
+import { CartService } from "../cart/cart.service";
+import { CartDto } from "../cart/dto/cart.dto";
+import { InvalidSurnameException, UserAlreadyExistsException, UserNotFoundException } from "./exceptions/exceptions";
 
 @Injectable()
 export class UserService {
 
   constructor(
-      private prisma: PrismaService,
-      private supportService: SupportService,
-      private orderService: OrderService,
-      private cartService: CartService,
-      ) {
+    private prisma: PrismaService,
+    private supportService: SupportService,
+    private orderService: OrderService,
+    private cartService: CartService
+  ) {
   }
 
   async getUser(
     username: string
   ): Promise<UserDto> {
     const siteUserData: SiteUserData = await this.getSiteUserDataByUsername(username);
-    let t = await this.supportService.getRequest("1");
-    console.log(t);
-    if (siteUserData == null) return null;
+    if (siteUserData == null) {
+      throw new UserNotFoundException("No user with such username found");
+    }
     const user: User = await this.getUserBySiteUserData(siteUserData);
     return this.toUserDto(user, siteUserData);
   }
 
   async createUser(createUserRequest: CreateUserRequest, role: UserRole): Promise<UserDto> {
-    // if (!this.validateRequest(createUserRequest)) {
-    //   return null;
-    // }
-    if (await this.getSiteUserDataByUsername(createUserRequest.username) !== null || await this.getSiteUserDataByEmail(createUserRequest.email) !== null) {
-      alert("User with this email or username already exists");
-      return null;
-    }
+    await this.validateRequest(createUserRequest);
+
     const siteUserData = await this.prisma.siteUserData.create({
       data: {
         email: createUserRequest.email.toString(),
@@ -82,7 +78,9 @@ export class UserService {
 
   async auth(authRequest: AuthRequest): Promise<UserDto> {
     const siteUserData: SiteUserData = await this.getSiteUserDataByUsername(authRequest.username);
-    if (siteUserData == null || siteUserData.password != authRequest.password) return null;
+    if (siteUserData == null || siteUserData.password != authRequest.password) {
+      throw new UserNotFoundException("no user with such username and password");
+    }
 
     const user: User = await this.getUserBySiteUserData(siteUserData);
 
@@ -116,11 +114,11 @@ export class UserService {
   async getUserCart(username: string): Promise<CartDto> {
     return this.cartService.getUserCart(username);
   }
-  //
+
   async getUserOrders(username: string): Promise<OrderDto[]> {
     return this.orderService.getUserOrders(username);
   }
-  //
+
   async getUserSupportRequests(username: string): Promise<SupportRequest[]> {
     return this.supportService.getUserSupportRequests(username);
   }
@@ -137,15 +135,22 @@ export class UserService {
     );
   }
 
-  private validateRequest(createUserRequest: CreateUserRequest): boolean {
-    if (createUserRequest.surname.match(/^[a-zA-Zа-яА-Я\s]*$/) ||
-      createUserRequest.name.match(/^[a-zA-Zа-яА-Я\s]*$/) ||
-      createUserRequest.username.match(/^[a-zA-Z\s]*$/)
-    ) {
-      alert("surname and name should contain only letters; username must contain english letters only");
-      return false;
-    } else {
-      return true;
+  private async validateRequest(createUserRequest: CreateUserRequest): Promise<void> {
+    if (await this.getSiteUserDataByUsername(createUserRequest.username) !== null) {
+      throw new UserAlreadyExistsException("User with this username already exists");
+    }
+    if (await this.getSiteUserDataByEmail(createUserRequest.email) !== null) {
+      throw new UserAlreadyExistsException("User with this email already exists");
+    }
+
+    if (!createUserRequest.username.match(/^[a-zA-Z\s]*$/)) {
+      throw new InvalidSurnameException("username must contain only english letters");
+    }
+    if (!createUserRequest.surname.match(/^[a-zA-Z\s]*$/)) {
+      throw new InvalidSurnameException("surname must contain only english letters");
+    }
+    if (!createUserRequest.name.match(/^[a-zA-Z\s]*$/)) {
+      throw new InvalidSurnameException("name must contain only english letters");
     }
   }
 }

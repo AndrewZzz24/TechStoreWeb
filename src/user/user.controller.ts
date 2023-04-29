@@ -1,4 +1,4 @@
-import {Get, Post, Delete, Param, Controller, Body, ConsoleLogger} from "@nestjs/common";
+import { Get, Post, Delete, Param, Controller, Body, ConsoleLogger, UseFilters } from "@nestjs/common";
 import {
     ApiBearerAuth,
     ApiOperation,
@@ -14,6 +14,7 @@ import {AuthRequest} from "./dto/authRequest";
 import {SupportRequest} from "../support/dto/supportRequest.dto";
 import {OrderDto} from "../order/dto/order.dto";
 import {CartDto} from "../cart/dto/cart.dto";
+import { HttpExceptionFilter } from "../exception.filter";
 
 @ApiBearerAuth()
 @ApiTags("users")
