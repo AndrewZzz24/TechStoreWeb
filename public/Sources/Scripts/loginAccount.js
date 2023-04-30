@@ -7,9 +7,6 @@ function loginButton() {
     password: password
   };
 
-  // document.getElementById("username").value = "";
-  // document.getElementById("password").value = "";
-
   fetch("users/auth", {
     method: "POST",
     headers: {
@@ -27,6 +24,8 @@ function loginButton() {
       } else {
         localStorage.setItem("userdata", JSON.stringify(data));
         setUser();
+        document.getElementById("username").value = "";
+        document.getElementById("password").value = "";
       }
     });
 }
@@ -65,14 +64,13 @@ function signInButton() {
       } else {
         localStorage.setItem("userdata", JSON.stringify(data));
         setUser();
+        document.getElementById("signInEmail").value = "";
+        document.getElementById("signInUsername").value = "";
+        document.getElementById("signInPassword").value = "";
+        document.getElementById("signInSurname").value = "";
+        document.getElementById("signInName").value = "";
       }
     });
-  //
-  // document.getElementById("signInEmail").value = "";
-  // document.getElementById("signInUsername").value = "";
-  // document.getElementById("signInPassword").value = "";
-  // document.getElementById("signInSurname").value = "";
-  // document.getElementById("signInName").value = "";
 }
 
 function setUser() {

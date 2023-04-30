@@ -8,7 +8,8 @@ import { RuntimeException } from "@nestjs/core/errors/exceptions";
 @Injectable()
 export class SupportService {
 
-  constructor(private prisma: PrismaService) {}
+  constructor(private prisma: PrismaService) {
+  }
 
   async getRequest(requestId: string): Promise<SupportRequest> {
     const supportRequest = await this.prisma.helpDeskSupportRequest.findFirst({
@@ -33,7 +34,7 @@ export class SupportService {
         title: createSupportRequest.title,
         message: createSupportRequest.message,
         status: HelpDeskSupportRequestStatus.CREATED,
-        userId: createSupportRequest.userId,
+        userId: createSupportRequest.userId
       }
     });
     return this.toSupportRequest(supportRequestDb);
@@ -49,11 +50,15 @@ export class SupportService {
     return deletedSupportRequest != null;
   }
 
-  async getUserSupportRequests(userId: string): Promise<SupportRequest[]> {
+  async getUserSupportRequests(userId: string, cursor: number, limit: number): Promise<SupportRequest[]> {
+    console.log("КУРСОР: " + cursor)
+    console.log("LIMIT: " + limit)
     const supportRequests = await this.prisma.helpDeskSupportRequest.findMany({
+      skip: cursor * limit,
       where: {
         userId: Number(userId)
-      }
+      },
+      take: limit
     });
     return supportRequests.map(function(value) {
       return new SupportRequest(

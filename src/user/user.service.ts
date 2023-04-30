@@ -119,8 +119,8 @@ export class UserService {
     return this.orderService.getUserOrders(username);
   }
 
-  async getUserSupportRequests(username: string): Promise<SupportRequest[]> {
-    return this.supportService.getUserSupportRequests(username);
+  async getUserSupportRequests(username: string, cursor: number, limit: number): Promise<SupportRequest[]> {
+    return this.supportService.getUserSupportRequests(username, cursor, limit);
   }
 
   private toUserDto(user: User, siteUserData: SiteUserData): UserDto {
@@ -143,8 +143,8 @@ export class UserService {
       throw new UserAlreadyExistsException("User with this email already exists");
     }
 
-    if (!createUserRequest.username.match(/^[a-zA-Z\s]*$/)) {
-      throw new InvalidSurnameException("username must contain only english letters");
+    if (!createUserRequest.username.match(/^[a-zA-Z0-9\s]*$/)) {
+      throw new InvalidSurnameException("username must contain only english letters and digits");
     }
     if (!createUserRequest.surname.match(/^[a-zA-Z\s]*$/)) {
       throw new InvalidSurnameException("surname must contain only english letters");

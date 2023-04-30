@@ -1,4 +1,4 @@
-import { Get, Post, Delete, Param, Controller, Body, ConsoleLogger, UseFilters } from "@nestjs/common";
+import { Get, Post, Delete, Param, Controller, Body, ConsoleLogger, UseFilters, Query } from "@nestjs/common";
 import {
     ApiBearerAuth,
     ApiOperation,
@@ -132,7 +132,9 @@ export class UserController {
     @Get('/:uid/support-requests')
     async getUserSupportRequests(
       @Param('uid') username: string,
+      @Query('cursor') cursor: string,
+      @Query('limit') limit: string,
     ): Promise<SupportRequest[]> {
-      return this.userService.getUserSupportRequests(username);
+      return this.userService.getUserSupportRequests(username, Number(cursor), Number(limit));
     }
 }
