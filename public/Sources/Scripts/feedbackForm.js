@@ -66,6 +66,7 @@ function makeRequest(page, itemsPerPage, userdata, button) {
     .then((response) => response.json())
     .then((data) => {
       if (data["statusCode"] !== undefined && data["statusCode"] !== 201) {
+        console.log(data)
         let alertMessage = data["exceptionResponse"];
         if (typeof (alertMessage) !== "string") alertMessage = alertMessage["message"];
         alert(alertMessage);

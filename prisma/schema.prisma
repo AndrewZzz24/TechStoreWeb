@@ -52,7 +52,7 @@ model Order {
   id         Int         @id @default(autoincrement())
   createdAt  DateTime    @default(now())
   totalPrice Float
-  userId     Int         @unique
+  userId     Int
   user       User        @relation(fields: [userId], references: [id])
   orderLines OrderLine[]
   Cart       Cart?       @relation(fields: [cartId], references: [id])
@@ -128,7 +128,7 @@ model HelpDeskSupportRequest {
   title     String
   message   String
   status    HelpDeskSupportRequestStatus
-  User      User                         @relation(fields: [userId], references: [id])
+  user      User                         @relation(fields: [userId], references: [id])
   userId    Int
 }
 

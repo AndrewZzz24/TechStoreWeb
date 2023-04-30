@@ -19,7 +19,9 @@ function loginButton() {
       console.log("ПОКАЗЫВАЮ В ЛОГИН = " + JSON.stringify(data));
       if (data["statusCode"] !== undefined && data["statusCode"] !== 200) {
         let alertMessage = data["exceptionResponse"];
-        if (typeof (alertMessage) !== "string") alertMessage = alertMessage["message"];
+        if (alertMessage === undefined || typeof (alertMessage) !== "string") {
+          alertMessage = alertMessage["message"];
+        }
         alert(alertMessage);
       } else {
         localStorage.setItem("userdata", JSON.stringify(data));
@@ -59,7 +61,9 @@ function signInButton() {
       console.log("ПОКАЗЫВАЮ В САЙНИН = " + JSON.stringify(data));
       if (data["statusCode"] !== undefined && data["statusCode"] !== 201) {
         let alertMessage = data["exceptionResponse"];
-        if (typeof (alertMessage) !== "string") alertMessage = alertMessage["message"];
+        if (alertMessage === undefined || typeof (alertMessage) !== "string") {
+          alertMessage = alertMessage["message"];
+        }
         alert(alertMessage);
       } else {
         localStorage.setItem("userdata", JSON.stringify(data));
@@ -79,9 +83,26 @@ function setUser() {
   let setUsername =
     existedUserdata === null ? "guest" : existedUserdata["username"];
   if (setUsername === undefined) return;
-  let t = document.querySelector(".user-mode");
-  t.innerHTML = "<span>Logged in as Customer: " + setUsername + "</span>";
-  console.log(t.innerHTML);
+  let loginButtonInNav = document.querySelector("#login");
+  loginButtonInNav.innerHTML = `${setUsername}`;
+
+  let mode = "guest";
+  if (setUsername !== "guest") {
+    mode = "customer";
+  }
+
+  let loginInBox = document.querySelector("#logInBox");
+  let signInBox = document.querySelector("#signInBox");
+  loginInBox.style.display = mode === "guest" ? "block" : "none";
+  signInBox.style.display = mode === "guest" ? "block" : "none";
+  console.log("logged in as", loginButtonInNav.innerHTML);
+
+  let changeInfoBox = document.querySelector("#changeInfoBox");
+  let logoutBox = document.querySelector("#logoutBox");
+  let deleteAccountBox = document.querySelector("#deleteAccountBox");
+  changeInfoBox.style.display = mode === "guest" ? "none" : "block";
+  logoutBox.style.display = mode === "guest" ? "none" : "block";
+  deleteAccountBox.style.display = mode === "guest" ? "none" : "block";
 }
 
 (function() {
@@ -89,3 +110,30 @@ function setUser() {
     setUser();
   });
 })();
+
+function logOut() {
+  localStorage.clear();
+  setUser();
+}
+
+function deleteUser() {
+  let existedUserdata = JSON.parse(localStorage.getItem("userdata"));
+
+  fetch("users/" + existedUserdata["username"], {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json"
+    },
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      if (data["statusCode"] !== undefined && data["statusCode"] !== 201) {
+        console.log("Exception: ", data)
+        let alertMessage = data["exceptionResponse"];
+        if (alertMessage !== undefined && typeof (alertMessage) !== "string") alertMessage = alertMessage["message"];
+        alert(alertMessage);
+      } else {
+        logOut();
+      }
+    });
+}

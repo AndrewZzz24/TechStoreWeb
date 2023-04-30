@@ -79,3 +79,17 @@
     position: absolute;
     display: block;
 }
+
+#changeInfoBox {
+    display: none;
+}
+
+#logoutBox {
+    text-align: center;
+    display: none;
+}
+
+#deleteAccountBox {
+    text-align: center;
+    display: none;
+}

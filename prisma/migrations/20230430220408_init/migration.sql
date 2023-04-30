@@ -152,9 +152,6 @@ CREATE UNIQUE INDEX "User_siteUserDataId_key" ON "User"("siteUserDataId");
 CREATE UNIQUE INDEX "Cart_userId_key" ON "Cart"("userId");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "Order_userId_key" ON "Order"("userId");
-
--- CreateIndex
 CREATE UNIQUE INDEX "Order_cartId_key" ON "Order"("cartId");
 
 -- CreateIndex

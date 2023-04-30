@@ -1,4 +1,4 @@
-<div class="login-box">
+<div class="login-box" id="signInBox">
   <h2>Sing in</h2>
   <form>
     <div class="user-box">
@@ -25,7 +25,7 @@
   </form>
 </div>
 
-<div class="login-box">
+<div class="login-box" id="logInBox">
   <h2>Login into account</h2>
   <form>
     <div class="user-box">
@@ -38,4 +38,37 @@
     </div>
     <input type="button" class="login-submit-button" value="Log In" onclick="loginButton();">
   </form>
+</div>
+
+<div class="login-box" id="changeInfoBox">
+  <h2>Edit your account</h2>
+  <form>
+    <div class="user-box">
+      <input type="password" id="oldPassword" required>
+      <label>old password</label>
+    </div>
+    <div class="user-box">
+      <input type="text" id="changedPassword" required>
+      <label>new password</label>
+    </div>
+    <div class="user-box">
+      <input type="text" id="changedName" required>
+      <label>new name</label>
+    </div>
+    <div class="user-box">
+      <input type="text" id="changedSurname" required>
+      <label>new surname</label>
+    </div>
+    <input type="button" class="login-submit-button" value="Change Account Data" onclick="">
+  </form>
+</div>
+
+<div class="login-box" id="logoutBox">
+  <h2>Logout from account</h2>
+  <input type="button" class="login-submit-button" value="Log Out" onclick="logOut()">
+</div>
+
+<div class="login-box" id="deleteAccountBox">
+  <h2>Delete account</h2>
+  <input type="button" class="login-submit-button" value="Delete Account" onclick="deleteUser()">
 </div>

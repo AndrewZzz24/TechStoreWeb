@@ -61,6 +61,30 @@ export class UserService {
 
     if (userData == null) return false;
 
+    const user = await this.prisma.user.findUnique({
+      where: {
+        siteUserDataId: Number(userData.id)
+      }
+    })
+
+    const deleteFromOrder = await this.prisma.order.deleteMany({
+      where: {
+        userId: user.id
+      }
+    })
+
+    const deleteFromCart = await this.prisma.cart.deleteMany({
+      where: {
+        userId: user.id
+      }
+    })
+
+    const deleteFromSupport = await this.prisma.helpDeskSupportRequest.deleteMany({
+      where: {
+        userId: user.id
+      }
+    })
+
     const deletedUser = await this.prisma.user.delete({
       where: {
         siteUserDataId: Number(userData.id)
