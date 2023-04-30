@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
+import { HttpException, HttpStatus, Injectable, NotImplementedException } from "@nestjs/common";
 import { UserDto } from "./dto/user.dto";
 import { PrismaService } from "../prisma.service";
 import { Cart, Order, SiteUserData, User, UserRole } from "@prisma/client";
@@ -11,6 +11,7 @@ import { OrderDto } from "../order/dto/order.dto";
 import { CartService } from "../cart/cart.service";
 import { CartDto } from "../cart/dto/cart.dto";
 import { InvalidSurnameException, UserAlreadyExistsException, UserNotFoundException } from "./exceptions/exceptions";
+import { ChangeAccountDataRequest } from "./dto/changeAccountDataRequest";
 
 @Injectable()
 export class UserService {
@@ -143,8 +144,12 @@ export class UserService {
     return this.orderService.getUserOrders(username);
   }
 
-  async getUserSupportRequests(username: string, cursor: number, limit: number): Promise<SupportRequest[]> {
-    return this.supportService.getUserSupportRequests(username, cursor, limit);
+  async getUserSupportRequests(userId: string, cursor: number, limit: number): Promise<SupportRequest[]> {
+    return this.supportService.getUserSupportRequests(userId, cursor, limit);
+  }
+
+  async changeUserAccountData(username: string, changeAccountDataRequest: ChangeAccountDataRequest): Promise<Boolean> {
+    throw new NotImplementedException();
   }
 
   private toUserDto(user: User, siteUserData: SiteUserData): UserDto {

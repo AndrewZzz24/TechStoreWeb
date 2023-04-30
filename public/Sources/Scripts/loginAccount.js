@@ -16,7 +16,6 @@ function loginButton() {
   })
     .then((response) => response.json())
     .then((data) => {
-      console.log("ПОКАЗЫВАЮ В ЛОГИН = " + JSON.stringify(data));
       if (data["statusCode"] !== undefined && data["statusCode"] !== 200) {
         let alertMessage = data["exceptionResponse"];
         if (alertMessage === undefined || typeof (alertMessage) !== "string") {
@@ -58,12 +57,10 @@ function signInButton() {
   })
     .then((response) => response.json())
     .then((data) => {
-      console.log("ПОКАЗЫВАЮ В САЙНИН = " + JSON.stringify(data));
       if (data["statusCode"] !== undefined && data["statusCode"] !== 201) {
+        console.log("Exception: ", data)
         let alertMessage = data["exceptionResponse"];
-        if (alertMessage === undefined || typeof (alertMessage) !== "string") {
-          alertMessage = alertMessage["message"];
-        }
+        if (alertMessage !== undefined && typeof (alertMessage) !== "string") alertMessage = alertMessage["message"];
         alert(alertMessage);
       } else {
         localStorage.setItem("userdata", JSON.stringify(data));
@@ -110,6 +107,48 @@ function setUser() {
     setUser();
   });
 })();
+
+function changeAccountData(){
+  let existedUserdata = JSON.parse(localStorage.getItem("userdata"));
+
+  const oldPassword = document.getElementById("oldPassword").value.trim();
+  const changedPassword = document.getElementById("changedPassword").value.trim();
+  const changedName = document.getElementById("changedName").value.trim();
+  const changedSurname = document.getElementById("changedSurname").value.trim();
+
+  let changeAccountData = {
+    oldPassword: oldPassword,
+    changedPassword: changedPassword,
+    changedName: changedName,
+    changedSurname: changedSurname
+  };
+
+  console.log(changeAccountData);
+
+  fetch("users/" + existedUserdata["id"] + "/change-account-data", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(changeAccountData)
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      if (data["statusCode"] !== undefined && data["statusCode"] !== 201) {
+        console.log("Exception: ", data)
+        let alertMessage = data["exceptionResponse"];
+        if (alertMessage !== undefined && typeof (alertMessage) !== "string") alertMessage = alertMessage["message"];
+        alert(alertMessage);
+      } else {
+        localStorage.setItem("userdata", JSON.stringify(data));
+        setUser();
+        document.getElementById("oldPassword").value = "";
+        document.getElementById("changedPassword").value = "";
+        document.getElementById("changedName").value = "";
+        document.getElementById("changedSurname").value = "";
+      }
+    });
+}
 
 function logOut() {
   localStorage.clear();

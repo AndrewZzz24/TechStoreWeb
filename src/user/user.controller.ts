@@ -15,6 +15,7 @@ import {SupportRequest} from "../support/dto/supportRequest.dto";
 import {OrderDto} from "../order/dto/order.dto";
 import {CartDto} from "../cart/dto/cart.dto";
 import { HttpExceptionFilter } from "../exception.filter";
+import { ChangeAccountDataRequest } from "./dto/changeAccountDataRequest";
 
 @ApiBearerAuth()
 @ApiTags("users")
@@ -131,10 +132,27 @@ export class UserController {
     @ApiResponse({ status: 404, description: 'Not Found' })
     @Get('/:uid/support-requests')
     async getUserSupportRequests(
-      @Param('uid') username: string,
+      @Param('uid') userId: string,
       @Query('cursor') cursor: string,
       @Query('limit') limit: string,
     ): Promise<SupportRequest[]> {
-      return this.userService.getUserSupportRequests(username, Number(cursor), Number(limit));
+      return this.userService.getUserSupportRequests(userId, Number(cursor), Number(limit));
+    }
+
+    @ApiOperation({ summary: 'Get user`s support requests' })
+    @ApiParam({ name: 'uid', type: 'string' })
+    @ApiResponse({
+        status: 200,
+        description: 'The user`s support requests has been successfully found.',
+        type: Boolean,
+    })
+    @ApiResponse({ status: 403, description: 'Forbidden' })
+    @ApiResponse({ status: 404, description: 'Not Found' })
+    @Post('/:uid/change-account-data')
+    async changeUserAccountData(
+      @Param('uid') username: string,
+      @Body() changeAccountDataRequest: ChangeAccountDataRequest
+    ): Promise<Boolean> {
+        return this.userService.changeUserAccountData(username, changeAccountDataRequest);
     }
 }
