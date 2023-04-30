@@ -118,13 +118,14 @@ export class OrderService {
 
     return new ProductDto(
       product.id,
-      "sd",
+      product.createdAt.toString(),
+      product.creatorUsername,
       product.title,
       product.price,
-      product.amountOnWarehouse.toString(),
-      "",
-      categories.map(it.toString),
-      null
+      product.quantity.toString(),
+      product.description,
+      categories.map(value => value.toString()),
+      product.discountPercent
     );
   }
 

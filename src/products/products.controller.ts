@@ -1,4 +1,4 @@
-import { Get, Post, Delete, Param, Controller, Body } from '@nestjs/common';
+import { Get, Post, Delete, Param, Controller, Body, Query } from "@nestjs/common";
 import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ProductsService } from './products.service';
 import { ProductDto } from './dto/product.dto';
@@ -60,7 +60,10 @@ export class ProductsController {
   @ApiResponse({ status: 403, description: 'Forbidden' })
   @ApiResponse({ status: 404, description: 'Not Found' })
   @Get()
-  async getAllProducts(): Promise<ProductDto[]> {
-    return this.productsService.getAllAvailableProducts();
+  async getAllProducts(
+    @Query('cursor') cursor: string,
+    @Query('limit') limit: string,
+  ): Promise<ProductDto[]> {
+    return this.productsService.getAllAvailableProducts(Number(cursor), Number(limit));
   }
 }

@@ -87,7 +87,5 @@ function setUser() {
 (function() {
   document.addEventListener("DOMContentLoaded", () => {
     setUser();
-    // loginButton();
-    // signInButton();
   });
 })();

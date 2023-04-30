@@ -1,32 +1,21 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  {{> head title="Наши Товары"}}
+  {{> head title="Каталог Товаров"}}
+  <link rel="stylesheet" href="Sources/Styles/Tables/products.css" type="text/css">
 </head>
 <body class="default-body">
 {{> header }}
 <main>
   <section class="main-section">
     <h2 class="main-section-header">
-      Мои достижения
+      Каталог товаров
     </h2>
-    <ol class="main-section-text">
-      <li>
-        <span> Победитель олимпиады <strong>(призёр 1й степени)</strong></span>
-      </li>
-      <li>
-        <span> Финалист олимпиады <strong>(топ 100 из 1000)</strong></span>
-      </li>
-    </ol>
+    <div class="product-list" id="comments">
+      <img src="Sources/MediaSources/loading.webp" alt="loading" id="loading" class="loading">
+    </div>
+    <button id="downloadProductsButton" class="pagination-button">Download More</button>
   </section>
-  <section class="main-section">
-    <h2 class="main-section-header">
-      Отзывы и рекомендации
-    </h2>
-  </section>
-  <div id="comments">
-    <img src="Sources/MediaSources/loading.webp" alt="loading" id="loading" class="loading">
-  </div>
 </main>
 {{> footer}}
 <script src="Sources/Scripts/comments.js"></script>

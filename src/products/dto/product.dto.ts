@@ -1,9 +1,11 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty } from "@nestjs/swagger";
 import { ShopProductItem } from "@prisma/client";
 
 export class ProductDto {
   @ApiProperty()
   readonly id: number;
+  @ApiProperty()
+  readonly createdAt: string;
   @ApiProperty()
   readonly creatorUsername: string;
   @ApiProperty()
@@ -20,16 +22,18 @@ export class ProductDto {
   readonly discountPercent?: number;
 
   constructor(
-     id: number,
-   creatorUsername: string,
-   title: string,
-   price: number,
-   quantity: string,
-   description: string,
-   categories: string[],
-   discountPercent?: number,
+    id: number,
+    createdAt: string,
+    creatorUsername: string,
+    title: string,
+    price: number,
+    quantity: string,
+    description: string,
+    categories: string[],
+    discountPercent?: number
   ) {
     this.id = id;
+    this.createdAt = createdAt;
     this.creatorUsername = creatorUsername;
     this.title = title;
     this.description = description;

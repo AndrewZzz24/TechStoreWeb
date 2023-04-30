@@ -15,8 +15,6 @@ function listenToSubmit() {
       message: description
     };
 
-    document.getElementById("feedback-form-id").reset();
-
     fetch("support/create-support-request", {
       method: "POST",
       headers: {
@@ -26,11 +24,13 @@ function listenToSubmit() {
     })
       .then((response) => response.json())
       .then((data) => {
-        if (data == null || data["statusCode"] === 500) {
-          alert("invalid support request");
+        if (data["statusCode"] !== undefined && data["statusCode"] !== 201) {
+          let alertMessage = data["exceptionResponse"];
+          if (typeof (alertMessage) !== "string") alertMessage = alertMessage["message"];
+          alert(alertMessage);
         } else {
-          console.log(JSON.stringify(supportRequest));
           renderSuggest(data);
+          document.getElementById("feedback-form-id").reset();
         }
       });
   });
@@ -47,16 +47,16 @@ function displayReviews() {
   let page = 0;
   let itemsPerPage = 2;
   const button = document.querySelector("#downloadButton");
-  makeRequest(page, itemsPerPage, userdata, button)
+  makeRequest(page, itemsPerPage, userdata, button);
 
   button.addEventListener("click", (event) => {
     event.preventDefault();
     page += 1;
-    makeRequest(page, itemsPerPage, userdata, button)
+    makeRequest(page, itemsPerPage, userdata, button);
   });
 }
 
-function makeRequest(page, itemsPerPage, userdata, button){
+function makeRequest(page, itemsPerPage, userdata, button) {
   fetch("users/" + userdata["id"] + "/support-requests?cursor=" + page + "&limit=" + itemsPerPage, {
     method: "GET",
     headers: {
@@ -65,16 +65,15 @@ function makeRequest(page, itemsPerPage, userdata, button){
   })
     .then((response) => response.json())
     .then((data) => {
-      if (data == null || data["statusCode"] === 500) {
-        console.log(data)
-        alert("invalid support request");
+      if (data["statusCode"] !== undefined && data["statusCode"] !== 201) {
+        let alertMessage = data["exceptionResponse"];
+        if (typeof (alertMessage) !== "string") alertMessage = alertMessage["message"];
+        alert(alertMessage);
       } else {
-        console.log(JSON.stringify(data));
-        for (let i = 0; i < itemsPerPage; i++) {
-          if (i >= data.length) {
-            button.style.display = "none";
-            break;
-          }
+        if (data.length <= itemsPerPage){
+          button.style.display = "none";
+        }
+        for (let i = 0; i < Math.min(itemsPerPage, data.length); i++) {
           renderSuggest(data[i]);
         }
       }
@@ -88,8 +87,19 @@ function renderSuggest(suggestObject) {
   let clone = template.content.cloneNode(true);
   let td = clone.querySelectorAll("td");
 
+  const date = new Date(suggestObject["createdAt"]);
+  const options = {
+    timeZone: "Europe/Moscow",
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit"
+  };
+  const formattedDate = date.toLocaleString('ru', options);
+
   td[0].textContent = suggestObject["title"];
-  td[1].textContent = suggestObject["userId"];
+  td[1].textContent = formattedDate;
   td[2].textContent = suggestObject["message"];
   td[3].textContent = suggestObject["status"];
 

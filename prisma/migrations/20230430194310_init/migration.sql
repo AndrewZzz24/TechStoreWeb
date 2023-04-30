@@ -94,9 +94,12 @@ CREATE TABLE "CartProductItem" (
 CREATE TABLE "ShopProductItem" (
     "id" SERIAL NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "price" DOUBLE PRECISION NOT NULL,
+    "creatorUsername" TEXT NOT NULL,
     "title" TEXT NOT NULL,
-    "amountOnWarehouse" INTEGER NOT NULL,
+    "price" DOUBLE PRECISION NOT NULL,
+    "quantity" INTEGER NOT NULL,
+    "description" TEXT NOT NULL,
+    "discountPercent" DOUBLE PRECISION NOT NULL,
 
     CONSTRAINT "ShopProductItem_pkey" PRIMARY KEY ("id")
 );

@@ -51,14 +51,12 @@ export class SupportService {
   }
 
   async getUserSupportRequests(userId: string, cursor: number, limit: number): Promise<SupportRequest[]> {
-    console.log("КУРСОР: " + cursor)
-    console.log("LIMIT: " + limit)
     const supportRequests = await this.prisma.helpDeskSupportRequest.findMany({
       skip: cursor * limit,
       where: {
         userId: Number(userId)
       },
-      take: limit
+      take: limit + 1
     });
     return supportRequests.map(function(value) {
       return new SupportRequest(

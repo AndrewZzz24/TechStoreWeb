@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { ProductDto } from "./dto/product.dto";
 import { PrismaService } from "../prisma.service";
-import { ShopProductItem } from "@prisma/client";
+import { Category, ShopProductItem } from "@prisma/client";
 import { CreateProductRequest } from "./dto/createProductRequest";
 
 @Injectable()
@@ -22,43 +22,30 @@ export class ProductsService {
       }
     });
 
-    return new ProductDto(
-      product.id,
-      "sd",
-      product.title,
-      product.price,
-      product.amountOnWarehouse.toString(),
-      "",
-      categories.map(it.toString),
-      null
-    );
+    return this.toProductDto(product, categories)
   }
 
   async createProduct(createProductRequest: CreateProductRequest): Promise<ProductDto> {
     const product = await this.prisma.shopProductItem.create({
       data: {
-        price: createProductRequest.price,
+        creatorUsername: createProductRequest.creatorUsername,
         title: createProductRequest.title,
-        amountOnWarehouse: createProductRequest.amountOnWarehouse,
+        price: createProductRequest.price,
+        quantity: createProductRequest.amountOnWarehouse,
+        description: createProductRequest.description,
+        discountPercent: createProductRequest.discountPercent
       }
     });
+    let categories: Category[] = [];
     for (const category of createProductRequest.categories) {
-      await this.prisma.category.create({
+      const createdCategory = await this.prisma.category.create({
         data: {
           description: category.toString(),
           shopProductItemId: product.id
         }
       });
-      return new ProductDto(
-        product.id,
-        "sd",
-        product.title,
-        product.price,
-        product.amountOnWarehouse.toString(),
-        "",
-        createProductRequest.categories,
-        null
-      );
+      categories.push(createdCategory)
+      return this.toProductDto(product, categories)
     }
   }
 
@@ -71,8 +58,11 @@ export class ProductsService {
     return categories != null;
   }
 
-  async getAllAvailableProducts(): Promise<ProductDto[]> {
-    const products: ShopProductItem[] = await this.prisma.shopProductItem.findMany({});
+  async getAllAvailableProducts(cursor: number, limit: number): Promise<ProductDto[]> {
+    const products: ShopProductItem[] = await this.prisma.shopProductItem.findMany({
+      skip: Number(cursor * limit),
+      take: Number(limit) + 1
+    });
     let result: ProductDto[] = [];
     for (const product of products) {
       const categories = await this.prisma.category.findMany({
@@ -81,19 +71,22 @@ export class ProductsService {
         }
       });
 
-      result.push(
-        new ProductDto(
-          product.id,
-          "sd",
-          product.title,
-          product.price,
-          product.amountOnWarehouse.toString(),
-          "",
-          categories.map(it.toString),
-          null
-        )
-      );
+      result.push(this.toProductDto(product, categories));
     }
     return result;
+  }
+
+  private toProductDto(product: ShopProductItem, categories: Category[]) {
+    return new ProductDto(
+      product.id,
+      product.createdAt.toString(),
+      product.creatorUsername,
+      product.title,
+      product.price,
+      product.quantity.toString(),
+      product.description,
+      categories.map(value => value.toString()),
+      product.discountPercent
+    );
   }
 }

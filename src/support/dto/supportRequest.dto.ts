@@ -25,6 +25,7 @@ export class SupportRequest {
   ) {
     this.id = id;
     this.userId = userId;
+    this.createdAt = createdAt;
     this.title = title;
     this.message = message;
     this.status = status;

@@ -93,14 +93,17 @@ model CartProductItem {
 }
 
 model ShopProductItem {
-  id                Int               @id @default(autoincrement())
-  createdAt         DateTime          @default(now())
-  price             Float
-  title             String
-  amountOnWarehouse Int
-  categories        Category[]
-  reviews           Review[]
-  CartProductItem   CartProductItem[]
+  id              Int               @id @default(autoincrement())
+  createdAt       DateTime          @default(now())
+  creatorUsername String
+  title           String
+  price           Float
+  quantity        Int
+  description     String
+  discountPercent Float
+  categories      Category[]
+  reviews         Review[]
+  CartProductItem CartProductItem[]
 }
 
 model Category {
