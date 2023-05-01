@@ -100,6 +100,13 @@ function setUser() {
   changeInfoBox.style.display = mode === "guest" ? "none" : "block";
   logoutBox.style.display = mode === "guest" ? "none" : "block";
   deleteAccountBox.style.display = mode === "guest" ? "none" : "block";
+
+  if (mode !== "guest"){
+    let changedName = document.querySelector("#changedName");
+    let changedSurname = document.querySelector("#changedSurname");
+    changedName.value = existedUserdata["name"]
+    changedSurname.value = existedUserdata["surname"]
+  }
 }
 
 (function() {
@@ -140,12 +147,13 @@ function changeAccountData(){
         if (alertMessage !== undefined && typeof (alertMessage) !== "string") alertMessage = alertMessage["message"];
         alert(alertMessage);
       } else {
-        localStorage.setItem("userdata", JSON.stringify(data));
-        setUser();
         document.getElementById("oldPassword").value = "";
         document.getElementById("changedPassword").value = "";
         document.getElementById("changedName").value = "";
         document.getElementById("changedSurname").value = "";
+        console.log("response data", data)
+        localStorage.setItem("userdata", JSON.stringify(data));
+        setUser();
       }
     });
 }

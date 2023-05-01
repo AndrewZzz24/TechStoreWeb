@@ -144,7 +144,7 @@ export class UserController {
     @ApiResponse({
         status: 200,
         description: 'The user`s support requests has been successfully found.',
-        type: Boolean,
+        type: UserDto,
     })
     @ApiResponse({ status: 403, description: 'Forbidden' })
     @ApiResponse({ status: 404, description: 'Not Found' })
@@ -152,7 +152,7 @@ export class UserController {
     async changeUserAccountData(
       @Param('uid') username: string,
       @Body() changeAccountDataRequest: ChangeAccountDataRequest
-    ): Promise<Boolean> {
+    ): Promise<UserDto> {
         return this.userService.changeUserAccountData(username, changeAccountDataRequest);
     }
 }

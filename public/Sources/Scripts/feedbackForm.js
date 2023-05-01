@@ -29,7 +29,6 @@ function listenToSubmit() {
           if (typeof (alertMessage) !== "string") alertMessage = alertMessage["message"];
           alert(alertMessage);
         } else {
-          renderSuggest(data);
           document.getElementById("feedback-form-id").reset();
         }
       });
@@ -38,15 +37,15 @@ function listenToSubmit() {
 
 function displayReviews() {
   const userdata = JSON.parse(localStorage.getItem("userdata"));
+  const button = document.querySelector("#downloadButton");
 
   if (userdata === null) {
-    alert("You have to log in first");
+    button.style.display = "none";
     return;
   }
 
   let page = 0;
   let itemsPerPage = 2;
-  const button = document.querySelector("#downloadButton");
   makeRequest(page, itemsPerPage, userdata, button);
 
   button.addEventListener("click", (event) => {

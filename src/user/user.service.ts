@@ -66,25 +66,25 @@ export class UserService {
       where: {
         siteUserDataId: Number(userData.id)
       }
-    })
+    });
 
     const deleteFromOrder = await this.prisma.order.deleteMany({
       where: {
         userId: user.id
       }
-    })
+    });
 
     const deleteFromCart = await this.prisma.cart.deleteMany({
       where: {
         userId: user.id
       }
-    })
+    });
 
     const deleteFromSupport = await this.prisma.helpDeskSupportRequest.deleteMany({
       where: {
         userId: user.id
       }
-    })
+    });
 
     const deletedUser = await this.prisma.user.delete({
       where: {
@@ -148,8 +148,23 @@ export class UserService {
     return this.supportService.getUserSupportRequests(userId, cursor, limit);
   }
 
-  async changeUserAccountData(username: string, changeAccountDataRequest: ChangeAccountDataRequest): Promise<Boolean> {
-    throw new NotImplementedException();
+  async changeUserAccountData(userId: string, changeAccountDataRequest: ChangeAccountDataRequest): Promise<UserDto> {
+    const user = await this.prisma.user.findUnique({
+      where: {
+        id: Number(userId)
+      }
+    });
+    const updatedUserData = await this.prisma.siteUserData.update({
+      where: {
+        id: user.siteUserDataId
+      },
+      data: {
+        password: changeAccountDataRequest.changedPassword,
+        name: changeAccountDataRequest.changedName,
+        surname: changeAccountDataRequest.changedSurname
+      }
+    });
+    return this.toUserDto(user, updatedUserData)
   }
 
   private toUserDto(user: User, siteUserData: SiteUserData): UserDto {
