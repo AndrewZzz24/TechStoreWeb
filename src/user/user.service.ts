@@ -18,6 +18,7 @@ import {
   UserNotFoundException
 } from "./exceptions/exceptions";
 import { ChangeAccountDataRequest } from "./dto/changeAccountDataRequest";
+import { JwtService } from "@nestjs/jwt";
 
 @Injectable()
 export class UserService {
@@ -26,7 +27,7 @@ export class UserService {
     private prisma: PrismaService,
     private supportService: SupportService,
     private orderService: OrderService,
-    private cartService: CartService
+    private cartService: CartService,
   ) {
   }
 
@@ -116,8 +117,7 @@ export class UserService {
     }
 
     const user: User = await this.getUserBySiteUserData(siteUserData);
-
-    return this.toUserDto(user, siteUserData);
+    return this.toUserDto(user, siteUserData)
   }
 
   async getSiteUserDataByUsername(username: string): Promise<SiteUserData> {

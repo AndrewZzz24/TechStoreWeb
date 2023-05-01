@@ -1,9 +1,10 @@
 import { Get, Post, Delete, Param, Controller, Body, Query } from "@nestjs/common";
-import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiParam, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { ProductsService } from './products.service';
 import { ProductDto } from './dto/product.dto';
 import { CreateProductRequest } from './dto/createProductRequest';
 
+@ApiBearerAuth()
 @ApiTags('products')
 @Controller('products')
 export class ProductsController {

@@ -1,4 +1,15 @@
-import { Get, Post, Delete, Param, Controller, Body, ConsoleLogger, UseFilters, Query } from "@nestjs/common";
+import {
+    Get,
+    Post,
+    Delete,
+    Param,
+    Controller,
+    Body,
+    ConsoleLogger,
+    UseFilters,
+    Query,
+    UseGuards
+} from "@nestjs/common";
 import {
     ApiBearerAuth,
     ApiOperation,
@@ -14,10 +25,12 @@ import {AuthRequest} from "./dto/authRequest";
 import {SupportRequest} from "../support/dto/supportRequest.dto";
 import {OrderDto} from "../order/dto/order.dto";
 import {CartDto} from "../cart/dto/cart.dto";
-import { HttpExceptionFilter } from "../exception.filter";
+import { SessionContainer } from 'supertokens-node/recipe/session';
 import { ChangeAccountDataRequest } from "./dto/changeAccountDataRequest";
+import { AuthGuard } from "../auth/auth.guard";
+import { Session } from "../auth/session.decorator";
 
-@ApiBearerAuth()
+// @ApiBearerAuth()
 @ApiTags("users")
 @Controller("users")
 export class UserController {
@@ -88,8 +101,13 @@ export class UserController {
     })
     @ApiResponse({status: 403, description: "Forbidden"})
     @ApiResponse({status: 404, description: "Not Found"})
+    @ApiBearerAuth()
+    @UseGuards(new AuthGuard())
     @Post("/auth")
-    async auth(@Body() authRequest: AuthRequest): Promise<UserDto> {
+    async auth(
+      @Session() session: SessionContainer,
+      @Body() authRequest: AuthRequest
+    ): Promise<UserDto> {
         return this.userService.auth(authRequest);
     }
 

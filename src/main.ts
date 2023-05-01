@@ -10,9 +10,42 @@ import { PrismaService } from "./prisma.service";
 import { HttpStatus, ValidationPipe } from "@nestjs/common";
 import { HttpExceptionFilter } from "./exception.filter";
 import { PrismaClientExceptionFilter } from "nestjs-prisma";
+import supertokens from "supertokens-node";
+import Session from "supertokens-node/recipe/session";
+import EmailPassword from "supertokens-node/recipe/emailpassword";
+import { middleware } from "supertokens-node/lib/build/framework/express";
 
 async function bootstrap() {
-  const app = await NestFactory.create<NestExpressApplication>(AppModule);
+  // supertokens.init({
+  //   framework: "express",
+  //   supertokens: {
+  //     // https://try.supertokens.com is for demo purposes. Replace this with the address of your core instance (sign up on supertokens.com), or self host a core.
+  //     connectionURI: "https://dev-0e4ec6a1e81e11edb88efb40042c40db-eu-west-1.aws.supertokens.io:3573",
+  //     apiKey: "W6hR-TjC0e=KS7dOv-GrLvXrtVqjqk",
+  //   },
+  //   appInfo: {
+  //     // learn more about this on https://supertokens.com/docs/session/appinfo
+  //     appName: "azweb",
+  //     apiDomain: "https://azweb.onrender.com",
+  //     websiteDomain: "https://azweb.onrender.com",
+  //     apiBasePath: "/api",
+  //     websiteBasePath: "/auth",
+  //   },
+  //   recipeList: [
+  //     EmailPassword.init(), // initializes signin / sign up features
+  //     Session.init() // initializes session features
+  //   ]
+  // });
+
+  let app = await NestFactory.create<NestExpressApplication>(AppModule);
+  const cors = require('cors');
+  app.use(cors({
+    origin: "https://azweb.onrender.com",
+    allowedHeaders: ["content-type", ...supertokens.getAllCORSHeaders()],
+    credentials: true,
+  }));
+  app.use(middleware());
+
   const prismaService = app.get(PrismaService);
   await prismaService.enableShutdownHooks(app);
   const config = new DocumentBuilder()
