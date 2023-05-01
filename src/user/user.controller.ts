@@ -120,7 +120,7 @@ export class UserController {
     async getUserOrders(@Param('uid') username: string): Promise<OrderDto[]> {
       return this.userService.getUserOrders(username);
     }
-    //
+
     @ApiOperation({ summary: 'Get user`s support requests' })
     @ApiParam({ name: 'uid', type: 'string' })
     @ApiResponse({

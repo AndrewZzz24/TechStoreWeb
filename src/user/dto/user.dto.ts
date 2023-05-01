@@ -10,9 +10,9 @@ export class UserDto {
   @ApiProperty()
   readonly password: string;
   @ApiProperty()
-  readonly name: string;
-  @ApiProperty()
   readonly surname: string;
+  @ApiProperty()
+  readonly name: string;
   @ApiProperty()
   readonly role: string;
 
@@ -21,15 +21,15 @@ export class UserDto {
     email: string,
     username: string,
     password: string,
-    name: string,
     surname: string,
+    name: string,
     role: string,
   ) {
     this.id = id;
     this.username = username;
     this.password = password;
-    this.name = name;
     this.surname = surname;
+    this.name = name;
     this.role = role;
   }
 }

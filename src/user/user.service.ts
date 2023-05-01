@@ -43,8 +43,8 @@ export class UserService {
         email: createUserRequest.email.toString(),
         username: createUserRequest.username.toString(),
         password: createUserRequest.password.toString(),
-        name: createUserRequest.name.toString(),
         surname: createUserRequest.surname.toString(),
+        name: createUserRequest.name.toString(),
         role: role
       }
     });
@@ -173,8 +173,8 @@ export class UserService {
       siteUserData.email,
       siteUserData.username,
       siteUserData.password,
-      siteUserData.name,
       siteUserData.surname,
+      siteUserData.name,
       siteUserData.role
     );
   }

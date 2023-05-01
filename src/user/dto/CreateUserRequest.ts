@@ -4,11 +4,11 @@ import { IsEmail, IsNotEmpty } from "class-validator";
 export class CreateUserRequest {
   @ApiProperty()
   @IsEmail()
-  email: string;
+  readonly email: string;
 
   @ApiProperty()
   @IsNotEmpty()
-  username: string;
+  readonly username: string;
 
   @ApiProperty()
   @IsNotEmpty()
@@ -16,9 +16,9 @@ export class CreateUserRequest {
 
   @ApiProperty()
   @IsNotEmpty()
-  readonly name: string;
+  readonly surname: string;
 
   @ApiProperty()
   @IsNotEmpty()
-  readonly surname: string;
+  readonly name: string;
 }

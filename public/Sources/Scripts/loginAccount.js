@@ -42,8 +42,8 @@ function signInButton() {
     email: email,
     username: username,
     password: password,
-    name: name,
-    surname: surname
+    surname: surname,
+    name: name
   };
 
   console.log(createUser);
