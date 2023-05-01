@@ -3,7 +3,7 @@ import { SupportRequest } from "./dto/supportRequest.dto";
 import { PrismaService } from "../prisma.service";
 import { HelpDeskSupportRequest, HelpDeskSupportRequestStatus } from "@prisma/client";
 import { CreateSupportRequest } from "./dto/createSupportRequest";
-import { RuntimeException } from "@nestjs/core/errors/exceptions";
+import { InvalidCreateSupportRequestRequestException, SupportRequestNotFoundException } from "./utils/exceptions";
 
 @Injectable()
 export class SupportService {
@@ -12,11 +12,15 @@ export class SupportService {
   }
 
   async getRequest(requestId: string): Promise<SupportRequest> {
-    const supportRequest = await this.prisma.helpDeskSupportRequest.findFirst({
+    const supportRequest = await this.prisma.helpDeskSupportRequest.findUnique({
       where: {
         id: Number(requestId)
       }
     });
+
+    if (supportRequest == null) {
+      throw new SupportRequestNotFoundException(`no support request with such requestId = ${requestId}`);
+    }
 
     return this.toSupportRequest(supportRequest);
   }
@@ -24,9 +28,8 @@ export class SupportService {
   async createRequest(
     createSupportRequest: CreateSupportRequest
   ): Promise<SupportRequest> {
-    if (!this.validateRequest(createSupportRequest)) {
-      throw new RuntimeException("invalid request input");
-    }
+    await this.validateRequest(createSupportRequest.userId);
+
     const time = new Date().toISOString();
     const supportRequestDb = await this.prisma.helpDeskSupportRequest.create({
       data: {
@@ -41,6 +44,10 @@ export class SupportService {
   }
 
   async deleteRequest(requestId: string): Promise<boolean> {
+    if (await this.prisma.helpDeskSupportRequest.findUnique({ where: { id: Number(requestId) } }) == null) {
+      throw new SupportRequestNotFoundException(`no support request with such requestId = ${requestId}`);
+    }
+
     const deletedSupportRequest = await this.prisma.helpDeskSupportRequest.delete({
       where: {
         id: Number(requestId)
@@ -51,6 +58,8 @@ export class SupportService {
   }
 
   async getUserSupportRequests(userId: string, cursor: number, limit: number): Promise<SupportRequest[]> {
+    await this.validateRequest(Number(userId));
+
     const supportRequests = await this.prisma.helpDeskSupportRequest.findMany({
       skip: cursor * limit,
       where: {
@@ -81,7 +90,9 @@ export class SupportService {
     );
   }
 
-  private validateRequest(createSupportRequest: CreateSupportRequest): boolean {
-    return true;
+  private async validateRequest(userId: number) {
+    if (userId === undefined || userId < 1 || await this.prisma.user.findUnique({ where: { id: userId } }) === null) {
+      throw new InvalidCreateSupportRequestRequestException("no such user registered");
+    }
   }
 }

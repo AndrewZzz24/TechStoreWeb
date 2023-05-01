@@ -57,18 +57,4 @@ export class CartController {
   async deleteOrder(@Param('cartId') cartId: string): Promise<boolean> {
     return this.cartService.deleteCart(cartId);
   }
-
-  // @ApiOperation({ summary: 'Get user cart' })
-  // @ApiParam({ name: 'userId', type: 'string' })
-  // @ApiResponse({
-  //   status: 200,
-  //   description: 'The user cart has been successfully found',
-  //   type: Boolean,
-  // })
-  // @ApiResponse({ status: 403, description: 'Forbidden' })
-  // @ApiResponse({ status: 404, description: 'Not Found' })
-  // @Get('/get-user-cart/:userId')
-  // async getUserCart(@Param('userId') cartId: string): Promise<CartDto> {
-  //   return this.cartService.getUserCart(cartId);
-  // }
 }

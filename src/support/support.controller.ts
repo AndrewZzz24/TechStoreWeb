@@ -33,7 +33,6 @@ export class SupportController {
   }
 
   @ApiOperation({ summary: 'Create support request' })
-  @ApiParam({ name: 'supportRequestDto', type: CreateSupportRequest })
   @ApiResponse({
     status: 201,
     description: 'The support request has been successfully created.',
@@ -63,20 +62,4 @@ export class SupportController {
   ): Promise<boolean> {
     return this.supportService.deleteRequest(requestId);
   }
-
-  // @ApiOperation({ summary: 'Get users support requests' })
-  // @ApiParam({ name: 'username', type: 'string' })
-  // @ApiResponse({
-  //   status: 200,
-  //   description: 'The users support requests has been successfully delete.',
-  //   type: [SupportRequest],
-  // })
-  // @ApiResponse({ status: 403, description: 'Forbidden' })
-  // @ApiResponse({ status: 404, description: 'Not Found' })
-  // @Get('/support-requests/:username')
-  // async getUserSupportRequests(
-  //   @Param('username') username: string,
-  // ): Promise<SupportRequest[]> {
-  //   return this.supportService.getUserSupportRequests(username);
-  // }
 }

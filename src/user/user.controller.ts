@@ -112,7 +112,7 @@ export class UserController {
     @ApiResponse({
       status: 200,
       description: 'The user`s orders has been successfully found.',
-      type: Array<OrderDto>,
+      type: [OrderDto],
     })
     @ApiResponse({ status: 403, description: 'Forbidden' })
     @ApiResponse({ status: 404, description: 'Not Found' })

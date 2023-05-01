@@ -3,6 +3,7 @@ import { ProductDto } from "./dto/product.dto";
 import { PrismaService } from "../prisma.service";
 import { Category, ShopProductItem } from "@prisma/client";
 import { CreateProductRequest } from "./dto/createProductRequest";
+import { InvalidCreateProductRequestException, ProductNotFoundException } from "./utils/exceptions";
 
 @Injectable()
 export class ProductsService {
@@ -11,11 +12,16 @@ export class ProductsService {
   }
 
   async getProduct(productId: string): Promise<ProductDto> {
-    const product = await this.prisma.shopProductItem.findFirst({
+    const product = await this.prisma.shopProductItem.findUnique({
       where: {
         id: Number(productId)
       }
     });
+
+    if (product == null) {
+      throw new ProductNotFoundException(`no product with such productId= ${productId}`)
+    }
+
     const categories = await this.prisma.category.findMany({
       where: {
         shopProductItemId: Number(productId)
@@ -26,6 +32,8 @@ export class ProductsService {
   }
 
   async createProduct(createProductRequest: CreateProductRequest): Promise<ProductDto> {
+    await this.validateRequest(createProductRequest)
+
     const product = await this.prisma.shopProductItem.create({
       data: {
         creatorUsername: createProductRequest.creatorUsername,
@@ -50,12 +58,22 @@ export class ProductsService {
   }
 
   async deleteProduct(productId: string): Promise<boolean> {
-    const categories = await this.prisma.shopProductItem.delete({
+    if (await this.prisma.shopProductItem.findUnique({ where: { id: Number(productId) } }) === null){
+      throw new ProductNotFoundException(`no product with such productId = ${productId} exists`)
+    }
+
+    const categories = await this.prisma.category.deleteMany({
+      where: {
+        shopProductItemId: Number(productId)
+      }
+    });
+
+    const deletedProduct = await this.prisma.shopProductItem.delete({
       where: {
         id: Number(productId)
       }
     });
-    return categories != null;
+    return deletedProduct != null;
   }
 
   async getAllAvailableProducts(cursor: number, limit: number): Promise<ProductDto[]> {
@@ -88,5 +106,11 @@ export class ProductsService {
       categories.map(value => value.toString()),
       product.discountPercent
     );
+  }
+
+  private async validateRequest(createProductRequest: CreateProductRequest) {
+    if (await this.prisma.siteUserData.findUnique({ where: { username: createProductRequest.creatorUsername } }) === null) {
+      throw new InvalidCreateProductRequestException("product creator's username does not exists");
+    }
   }
 }

@@ -1,7 +1,7 @@
-import { HttpException, HttpStatus, Injectable, NotImplementedException } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
 import { UserDto } from "./dto/user.dto";
 import { PrismaService } from "../prisma.service";
-import { Cart, Order, SiteUserData, User, UserRole } from "@prisma/client";
+import { SiteUserData, User, UserRole } from "@prisma/client";
 import { CreateUserRequest } from "./dto/CreateUserRequest";
 import { AuthRequest } from "./dto/authRequest";
 import { SupportService } from "../support/support.service";
@@ -10,7 +10,13 @@ import { OrderService } from "../order/order.service";
 import { OrderDto } from "../order/dto/order.dto";
 import { CartService } from "../cart/cart.service";
 import { CartDto } from "../cart/dto/cart.dto";
-import { InvalidSurnameException, UserAlreadyExistsException, UserNotFoundException } from "./exceptions/exceptions";
+import {
+  InvalidNameException, InvalidPasswordException,
+  InvalidSurnameException,
+  InvalidUsernameException,
+  UserAlreadyExistsException,
+  UserNotFoundException
+} from "./exceptions/exceptions";
 import { ChangeAccountDataRequest } from "./dto/changeAccountDataRequest";
 
 @Injectable()
@@ -60,7 +66,9 @@ export class UserService {
   async deleteUser(username: string): Promise<boolean> {
     const userData: SiteUserData = await this.getSiteUserDataByUsername(username);
 
-    if (userData == null) return false;
+    if (userData == null) {
+      throw new UserNotFoundException("No user with such username found");
+    }
 
     const user = await this.prisma.user.findUnique({
       where: {
@@ -149,11 +157,21 @@ export class UserService {
   }
 
   async changeUserAccountData(userId: string, changeAccountDataRequest: ChangeAccountDataRequest): Promise<UserDto> {
+    this.validateSurname(changeAccountDataRequest.changedSurname)
+    this.validateName(changeAccountDataRequest.changedName)
     const user = await this.prisma.user.findUnique({
       where: {
         id: Number(userId)
       }
     });
+    const siteUserData = await this.prisma.siteUserData.findUnique({
+      where: {
+        id: user.siteUserDataId
+      }
+    })
+    if (siteUserData.password !== changeAccountDataRequest.oldPassword){
+      throw new InvalidPasswordException("old password is incorrect")
+    }
     const updatedUserData = await this.prisma.siteUserData.update({
       where: {
         id: user.siteUserDataId
@@ -164,7 +182,7 @@ export class UserService {
         surname: changeAccountDataRequest.changedSurname
       }
     });
-    return this.toUserDto(user, updatedUserData)
+    return this.toUserDto(user, updatedUserData);
   }
 
   private toUserDto(user: User, siteUserData: SiteUserData): UserDto {
@@ -187,14 +205,35 @@ export class UserService {
       throw new UserAlreadyExistsException("User with this email already exists");
     }
 
-    if (!createUserRequest.username.match(/^[a-zA-Z0-9\s]*$/)) {
+    // if (!createUserRequest.username.match(/^[a-zA-Z0-9\s]*$/)) {
+    //   throw new InvalidSurnameException("username must contain only english letters and digits");
+    // }
+    // if (!createUserRequest.surname.match(/^[a-zA-Z\s]*$/)) {
+    //   throw new InvalidSurnameException("surname must contain only english letters");
+    // }
+    // if (!createUserRequest.name.match(/^[a-zA-Z\s]*$/)) {
+    //   throw new InvalidSurnameException("name must contain only english letters");
+    // }
+    this.validateUsername(createUserRequest.username)
+    this.validateSurname(createUserRequest.surname)
+    this.validateName(createUserRequest.name)
+  }
+
+  private validateUsername(username: string){
+    if (!username.match(/^[a-zA-Z0-9\s]*$/)) {
       throw new InvalidSurnameException("username must contain only english letters and digits");
     }
-    if (!createUserRequest.surname.match(/^[a-zA-Z\s]*$/)) {
-      throw new InvalidSurnameException("surname must contain only english letters");
+  }
+
+  private validateName(name: string){
+    if (!name.match(/^[a-zA-Z\s]*$/)) {
+      throw new InvalidNameException("name must contain only english letters");
     }
-    if (!createUserRequest.name.match(/^[a-zA-Z\s]*$/)) {
-      throw new InvalidSurnameException("name must contain only english letters");
+  }
+
+  private validateSurname(surname: string){
+    if (!surname.match(/^[a-zA-Z\s]*$/)) {
+      throw new InvalidUsernameException("surname must contain only english letters");
     }
   }
 }
