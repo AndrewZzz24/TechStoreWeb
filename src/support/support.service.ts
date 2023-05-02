@@ -26,9 +26,15 @@ export class SupportService {
   }
 
   async createRequest(
+    email: string,
     createSupportRequest: CreateSupportRequest
   ): Promise<SupportRequest> {
-    await this.validateRequest(createSupportRequest.userId);
+    await this.validateRequest(email);
+    const user = await this.prisma.siteUserData.findUnique({
+      where: {
+        email: email
+      }
+    })
 
     const time = new Date().toISOString();
     const supportRequestDb = await this.prisma.helpDeskSupportRequest.create({
@@ -37,7 +43,7 @@ export class SupportService {
         title: createSupportRequest.title,
         message: createSupportRequest.message,
         status: HelpDeskSupportRequestStatus.CREATED,
-        userId: createSupportRequest.userId
+        userId: user.id
       }
     });
     return this.toSupportRequest(supportRequestDb);
@@ -57,13 +63,21 @@ export class SupportService {
     return deletedSupportRequest != null;
   }
 
-  async getUserSupportRequests(userId: string, cursor: number, limit: number): Promise<SupportRequest[]> {
-    await this.validateRequest(Number(userId));
+  async getUserSupportRequests(email: string, cursor: number, limit: number): Promise<SupportRequest[]> {
+    console.log(`EMAIL === ${email}`)
+    const user = await this.prisma.siteUserData.findUnique({
+      where: {
+        email: email
+      }
+    })
+    if (user === null) {
+      throw new InvalidCreateSupportRequestRequestException(`no such user registered email= ${email}`);
+    }
 
     const supportRequests = await this.prisma.helpDeskSupportRequest.findMany({
       skip: cursor * limit,
       where: {
-        userId: Number(userId)
+        userId: user.id
       },
       take: limit + 1
     });
@@ -90,8 +104,8 @@ export class SupportService {
     );
   }
 
-  private async validateRequest(userId: number) {
-    if (userId === undefined || userId < 1 || await this.prisma.user.findUnique({ where: { id: userId } }) === null) {
+  private async validateRequest(email: string) {
+    if (await this.prisma.siteUserData.findUnique({ where: { email: email } }) === null) {
       throw new InvalidCreateSupportRequestRequestException("no such user registered");
     }
   }

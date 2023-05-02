@@ -1,4 +1,4 @@
-import { Get, Post, Delete, Param, Controller, Body } from '@nestjs/common';
+import { Get, Post, Delete, Param, Controller, Body, UseGuards } from "@nestjs/common";
 import {
   ApiBearerAuth,
   ApiOperation,
@@ -9,8 +9,11 @@ import {
 import { SupportService } from './support.service';
 import { SupportRequest } from './dto/supportRequest.dto';
 import { CreateSupportRequest } from './dto/createSupportRequest';
+import { AuthGuard } from "../auth/auth.guard";
+import { Session } from "../auth/session.decorator";
+import { SessionContainer } from "supertokens-node/recipe/session";
+import EmailPassword from "supertokens-node/recipe/emailpassword";
 
-@ApiBearerAuth()
 @ApiTags('support')
 @Controller('support')
 export class SupportController {
@@ -40,11 +43,18 @@ export class SupportController {
   })
   @ApiResponse({ status: 403, description: 'Forbidden' })
   @ApiResponse({ status: 404, description: 'User Not Found' })
+  @UseGuards(new AuthGuard())
   @Post('/create-support-request')
   async createSupportRequest(
+    @Session() session: SessionContainer,
     @Body() supportRequestDto: CreateSupportRequest,
   ): Promise<SupportRequest> {
-    return this.supportService.createRequest(supportRequestDto);
+    console.log("ВЫВОД", "12312321321312")
+    const userId = session.getUserId(session)
+    const user = await EmailPassword.getUserById(userId)
+    console.log(userId)
+    console.log(user)
+    return this.supportService.createRequest(user.email, supportRequestDto);
   }
 
   @ApiOperation({ summary: 'Delete support request' })

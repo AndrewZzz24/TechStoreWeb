@@ -14,13 +14,15 @@
     </h2>
     <div>
       <form id="feedback-form-id" class="feedback-form">
-        <label for="title"></label><input required type="text" maxlength="50" placeholder="Тема обращение"
-                                          class="text-field box1" id="title">
-<!--        <label for="contact"></label><input required type="text" maxlength="50" placeholder="Контакт для связи"-->
-<!--                                            class="text-field box2" id="contact">-->
-        <label for="description"></label><input required type="text" placeholder="Текст обращения" class="text-field box3"
-                                                id="description">
-        <input type="submit" class="submit-button box4">
+        <div>
+          <input required type="text" maxlength="50" placeholder="Тема обращение" class="text-field box1" id="title">
+          <label for="title"></label>
+        </div>
+        <div>
+          <input required type="text" placeholder="Текст обращения" class="text-field box3" id="description">
+          <label for="description"></label>
+        </div>
+        <input type="button" class="submit-button box4" value="Send" onclick="listenToSubmit()">
       </form>
     </div>
     <h2>

@@ -1,13 +1,15 @@
 function loginButton() {
-  const username = document.getElementById("username").value.trim();
+  const email = document.getElementById("username").value.trim();
   const password = document.getElementById("password").value.trim();
 
   let userData = {
-    username: username,
-    password: password
+    formFields: [
+      { id: "email", value: email },
+      { id: "password", value: password }
+    ]
   };
 
-  fetch("users/auth", {
+  fetch("api/signin", {
     method: "POST",
     headers: {
       "Content-Type": "application/json"
@@ -16,12 +18,17 @@ function loginButton() {
   })
     .then((response) => response.json())
     .then((data) => {
-      if (data["statusCode"] !== undefined && data["statusCode"] !== 200) {
-        let alertMessage = data["exceptionResponse"];
-        if (alertMessage === undefined || typeof (alertMessage) !== "string") {
-          alertMessage = alertMessage["message"];
-        }
-        alert(alertMessage);
+      console.log(data)
+      // if (data["statusCode"] !== undefined && data["statusCode"] !== 200) {
+      if (data['status'] !== "OK") {
+        // let alertMessage = data["exceptionResponse"];
+        // if (alertMessage === undefined || typeof (alertMessage) !== "string") {
+        //   alertMessage = alertMessage["message"];
+        // }
+        // alert(alertMessage);
+        // let msg = ""
+        // console.log(data['formFields'].map(value => msg += value['error']))
+        alert(JSON.stringify(data))
       } else {
         localStorage.setItem("userdata", JSON.stringify(data));
         setUser();
@@ -38,17 +45,27 @@ function signInButton() {
   const surname = document.getElementById("signInSurname").value.trim();
   const name = document.getElementById("signInName").value.trim();
 
+  // let createUser = {
+  //   email: email,
+  //   username: username,
+  //   password: password,
+  //   surname: surname,
+  //   name: name
+  // };
+
   let createUser = {
-    email: email,
-    username: username,
-    password: password,
-    surname: surname,
-    name: name
+    formFields: [
+      { id: "email", value: email },
+      { id: "username", value: username },
+      { id: "password", value: password },
+      { id: "surname", value: surname },
+      { id: "name", value: name }
+    ]
   };
 
   console.log(createUser);
 
-  fetch("users/create-customer", {
+  fetch("api/signup", {
     method: "POST",
     headers: {
       "Content-Type": "application/json"
@@ -57,11 +74,16 @@ function signInButton() {
   })
     .then((response) => response.json())
     .then((data) => {
-      if (data["statusCode"] !== undefined && data["statusCode"] !== 201) {
-        console.log("Exception: ", data)
-        let alertMessage = data["exceptionResponse"];
-        if (alertMessage !== undefined && typeof (alertMessage) !== "string") alertMessage = alertMessage["message"];
-        alert(alertMessage);
+      // if (data["statusCode"] !== undefined && data["statusCode"] !== 200) {
+      if (data['status'] !== "OK") {
+        // let alertMessage = data["exceptionResponse"];
+        // if (alertMessage === undefined || typeof (alertMessage) !== "string") {
+        //   alertMessage = alertMessage["message"];
+        // }
+        // alert(alertMessage);
+        // let msg = ""
+        // console.log(data['formFields'].map(value => msg += value['error']))
+        alert(JSON.stringify(data))
       } else {
         localStorage.setItem("userdata", JSON.stringify(data));
         setUser();
@@ -76,9 +98,10 @@ function signInButton() {
 
 function setUser() {
   let existedUserdata = JSON.parse(localStorage.getItem("userdata"));
-  console.log(existedUserdata);
+  console.log("userdata= ", existedUserdata);
+
   let setUsername =
-    existedUserdata === null ? "guest" : existedUserdata["username"];
+    existedUserdata === null ? "guest" : existedUserdata["user"]["email"];
   if (setUsername === undefined) return;
   let loginButtonInNav = document.querySelector("#login");
   loginButtonInNav.innerHTML = `${setUsername}`;
@@ -101,11 +124,11 @@ function setUser() {
   logoutBox.style.display = mode === "guest" ? "none" : "block";
   deleteAccountBox.style.display = mode === "guest" ? "none" : "block";
 
-  if (mode !== "guest"){
+  if (mode !== "guest") {
     let changedName = document.querySelector("#changedName");
     let changedSurname = document.querySelector("#changedSurname");
-    changedName.value = existedUserdata["name"]
-    changedSurname.value = existedUserdata["surname"]
+    // changedName.value = existedUserdata["name"];
+    // changedSurname.value = existedUserdata["surname"];
   }
 }
 
@@ -115,7 +138,7 @@ function setUser() {
   });
 })();
 
-function changeAccountData(){
+function changeAccountData() {
   let existedUserdata = JSON.parse(localStorage.getItem("userdata"));
 
   const oldPassword = document.getElementById("oldPassword").value.trim();
@@ -132,7 +155,7 @@ function changeAccountData(){
 
   console.log(changeAccountData);
 
-  fetch("users/" + existedUserdata["id"] + "/change-account-data", {
+  fetch("users/account/change-account-data", {
     method: "POST",
     headers: {
       "Content-Type": "application/json"
@@ -142,7 +165,7 @@ function changeAccountData(){
     .then((response) => response.json())
     .then((data) => {
       if (data["statusCode"] !== undefined && data["statusCode"] !== 201) {
-        console.log("Exception: ", data)
+        console.log("Exception: ", data);
         let alertMessage = data["exceptionResponse"];
         if (alertMessage !== undefined && typeof (alertMessage) !== "string") alertMessage = alertMessage["message"];
         alert(alertMessage);
@@ -151,7 +174,7 @@ function changeAccountData(){
         document.getElementById("changedPassword").value = "";
         document.getElementById("changedName").value = "";
         document.getElementById("changedSurname").value = "";
-        console.log("response data", data)
+        console.log("response data", data);
         localStorage.setItem("userdata", JSON.stringify(data));
         setUser();
       }
@@ -166,16 +189,16 @@ function logOut() {
 function deleteUser() {
   let existedUserdata = JSON.parse(localStorage.getItem("userdata"));
 
-  fetch("users/" + existedUserdata["username"], {
+  fetch("users/", {
     method: "DELETE",
     headers: {
       "Content-Type": "application/json"
-    },
+    }
   })
     .then((response) => response.json())
     .then((data) => {
       if (data["statusCode"] !== undefined && data["statusCode"] !== 201) {
-        console.log("Exception: ", data)
+        console.log("Exception: ", data);
         let alertMessage = data["exceptionResponse"];
         if (alertMessage !== undefined && typeof (alertMessage) !== "string") alertMessage = alertMessage["message"];
         alert(alertMessage);

@@ -19,6 +19,7 @@ import {
 } from "./exceptions/exceptions";
 import { ChangeAccountDataRequest } from "./dto/changeAccountDataRequest";
 import { JwtService } from "@nestjs/jwt";
+import { InvalidCreateSupportRequestRequestException } from "../support/utils/exceptions";
 
 @Injectable()
 export class UserService {
@@ -36,7 +37,7 @@ export class UserService {
   ): Promise<UserDto> {
     const siteUserData: SiteUserData = await this.getSiteUserDataByUsername(username);
     if (siteUserData == null) {
-      throw new UserNotFoundException("No user with such username found");
+      throw new UserNotFoundException(`No user with such username=${username} found1`);
     }
     const user: User = await this.getUserBySiteUserData(siteUserData);
     return this.toUserDto(user, siteUserData);
@@ -64,11 +65,11 @@ export class UserService {
     return this.toUserDto(user, siteUserData);
   }
 
-  async deleteUser(username: string): Promise<boolean> {
-    const userData: SiteUserData = await this.getSiteUserDataByUsername(username);
+  async deleteUser(email: string): Promise<boolean> {
+    const userData: SiteUserData = await this.getSiteUserDataByEmail(email);
 
     if (userData == null) {
-      throw new UserNotFoundException("No user with such username found");
+      throw new UserNotFoundException(`No user with such email = '${email}' found2`);
     }
 
     const user = await this.prisma.user.findUnique({
@@ -152,23 +153,27 @@ export class UserService {
     return this.orderService.getUserOrders(username);
   }
 
-  async getUserSupportRequests(userId: string, cursor: number, limit: number): Promise<SupportRequest[]> {
-    return this.supportService.getUserSupportRequests(userId, cursor, limit);
+  async getUserSupportRequests(email: string, cursor: number, limit: number): Promise<SupportRequest[]> {
+    return this.supportService.getUserSupportRequests(email, cursor, limit);
   }
 
-  async changeUserAccountData(userId: string, changeAccountDataRequest: ChangeAccountDataRequest): Promise<UserDto> {
+  async changeUserAccountData(email: string, changeAccountDataRequest: ChangeAccountDataRequest): Promise<UserDto> {
+    const siteUserData = await this.prisma.siteUserData.findUnique({
+      where: {
+        email: email
+      }
+    })
+    if (siteUserData === null) {
+      throw new InvalidCreateSupportRequestRequestException(`no such user registered email= ${email}`);
+    }
+
     this.validateSurname(changeAccountDataRequest.changedSurname)
     this.validateName(changeAccountDataRequest.changedName)
     const user = await this.prisma.user.findUnique({
       where: {
-        id: Number(userId)
+        siteUserDataId: siteUserData.id
       }
     });
-    const siteUserData = await this.prisma.siteUserData.findUnique({
-      where: {
-        id: user.siteUserDataId
-      }
-    })
     if (siteUserData.password !== changeAccountDataRequest.oldPassword){
       throw new InvalidPasswordException("old password is incorrect")
     }

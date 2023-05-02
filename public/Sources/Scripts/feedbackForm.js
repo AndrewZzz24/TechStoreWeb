@@ -1,7 +1,4 @@
 function listenToSubmit() {
-  document.addEventListener("submit", (event) => {
-    event.preventDefault();
-
     const title = document.getElementById("title").value.trim();
     const description = document.getElementById("description").value.trim();
     const userdata = JSON.parse(localStorage.getItem("userdata"));
@@ -10,7 +7,6 @@ function listenToSubmit() {
       return;
     }
     let supportRequest = {
-      userId: userdata["id"],
       title: title,
       message: description
     };
@@ -24,6 +20,7 @@ function listenToSubmit() {
     })
       .then((response) => response.json())
       .then((data) => {
+        console.log(data)
         if (data["statusCode"] !== undefined && data["statusCode"] !== 201) {
           let alertMessage = data["exceptionResponse"];
           if (typeof (alertMessage) !== "string") alertMessage = alertMessage["message"];
@@ -32,13 +29,12 @@ function listenToSubmit() {
           document.getElementById("feedback-form-id").reset();
         }
       });
-  });
 }
 
 function displayReviews() {
   const userdata = JSON.parse(localStorage.getItem("userdata"));
   const button = document.querySelector("#downloadButton");
-
+  console.log("USEDATA in DISPLAY REVIEWS= ", userdata)
   if (userdata === null) {
     button.style.display = "none";
     return;
@@ -56,7 +52,7 @@ function displayReviews() {
 }
 
 function makeRequest(page, itemsPerPage, userdata, button) {
-  fetch("users/" + userdata["id"] + "/support-requests?cursor=" + page + "&limit=" + itemsPerPage, {
+  fetch("users/account/support-requests?cursor=" + page + "&limit=" + itemsPerPage, {
     method: "GET",
     headers: {
       "Content-Type": "application/json"
@@ -108,7 +104,7 @@ function renderSuggest(suggestObject) {
 
 (function() {
   document.addEventListener("DOMContentLoaded", () => {
-    listenToSubmit();
+    // listenToSubmit();
     displayReviews();
   });
 })();

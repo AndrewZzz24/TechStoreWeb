@@ -21,7 +21,7 @@ import { AuthModule } from './auth/auth.module';
         apiDomain: "https://azweb.onrender.com",
         websiteDomain: "https://azweb.onrender.com",
         apiBasePath: "/api",
-        websiteBasePath: "/auth",
+        websiteBasePath: "/index",
       },
     }),
     CartModule,

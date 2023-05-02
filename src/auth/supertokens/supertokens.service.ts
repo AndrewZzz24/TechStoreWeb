@@ -1,162 +1,112 @@
-import { Inject, Injectable } from '@nestjs/common';
-import supertokens from 'supertokens-node';
-import Session from 'supertokens-node/recipe/session';
-import EmailPassword from 'supertokens-node/recipe/emailpassword';
-
-import { ConfigInjectionToken, AuthModuleConfig } from '../config.interface';
-import Dashboard from 'supertokens-node/recipe/dashboard';
-import { UserService } from '../../user/user.service';
-import { UserRoleService } from '../../user/user-role.service';
-import UserRoles from 'supertokens-node/recipe/userroles';
-import { RoleService } from '../../user/roles.service';
-
-async function createRole(role = 'USER') {
-  /**
-   * You can choose to give multiple or no permissions when creating a role
-   * createNewRoleOrAddPermissions("user", []) - No permissions
-   * createNewRoleOrAddPermissions("user", ["read", "write"]) - Multiple permissions
-   */
-  const response = await UserRoles.createNewRoleOrAddPermissions(role, [
-    'read',
-    'write',
-  ]);
-
-  if (response.createdNewRole === false) {
-    // The role already exists
-  }
-}
-async function addRoleToUser(userId: string, role = 'USER') {
-  const response = await UserRoles.addRoleToUser(userId, role);
-  console.log('ROLE ADDED', response);
-  if (response.status === 'UNKNOWN_ROLE_ERROR') {
-    await createRole(role);
-    await addRoleToUser(userId, role);
-    return;
-  }
-
-  if (response.didUserAlreadyHaveRole === true) {
-    // The user already had the role
-    return;
-  }
-}
+import { Inject, Injectable } from "@nestjs/common";
+import supertokens from "supertokens-node";
+import Session from "supertokens-node/recipe/session";
+import EmailPassword from "supertokens-node/recipe/emailpassword";
+import { ConfigInjectionToken, AuthModuleConfig } from "../config.interface";
+import Dashboard from "supertokens-node/recipe/dashboard";
+import { UserService } from "../../user/user.service";
+import { UserRole } from "@prisma/client";
 
 @Injectable()
 export class SupertokensService {
   constructor(
     @Inject(ConfigInjectionToken) private config: AuthModuleConfig,
-    private readonly userService: UserService,
-    private readonly userRoleService: UserRoleService,
-    private readonly roleService: RoleService,
+    private readonly userService: UserService
   ) {
     supertokens.init({
       appInfo: config.appInfo,
       supertokens: {
         connectionURI: config.connectionURI,
-        apiKey: config.apiKey,
+        apiKey: config.apiKey
       },
       recipeList: [
         EmailPassword.init({
           signUpFeature: {
             formFields: [
               {
-                id: 'email',
+                id: "email"
               },
               {
-                id: 'login',
+                id: "username"
               },
               {
-                id: 'password',
+                id: "password"
               },
-            ],
+              {
+                id: "surname"
+              },
+              {
+                id: "name"
+              },
+            ]
           },
           override: {
             apis: (originalImplementation) => {
               return {
                 ...originalImplementation,
-                signUpPOST: async function (input) {
+                signUpPOST: async function(input) {
                   if (originalImplementation.signUpPOST === undefined) {
-                    throw Error('Should never come here');
+                    throw Error("Should never come here");
                   }
-                  await createRole();
 
-                  // First we call the original implementation of signUpPOST.
                   const response = await originalImplementation.signUpPOST(
-                    input,
+                    input
                   );
 
-                  // Post sign up response, we check if it was successful
-                  if (response.status === 'OK') {
+                  if (response.status === "OK") {
                     // These are the input form fields values that the user used while signing up
                     const formFields = input.formFields;
                     const email = formFields.filter(
-                      (obj) => obj.id === 'email',
+                      (obj) => obj.id === "email"
                     )[0];
-                    const login = formFields.filter(
-                      (obj) => obj.id === 'login',
+                    const username = formFields.filter(
+                      (obj) => obj.id === "username"
                     )[0];
                     const password = formFields.filter(
-                      (obj) => obj.id === 'password',
+                      (obj) => obj.id === "password"
+                    )[0];
+                    const surname = formFields.filter(
+                      (obj) => obj.id === "surname"
+                    )[0];
+                    const name = formFields.filter(
+                      (obj) => obj.id === "name"
                     )[0];
                     const userEntity = await userService.createUser({
-                      active: true,
-                      email: email.value,
-                      login: login.value,
-                      password: password.value,
-                    });
-                    await userRoleService.createUserRole({
-                      user: {
-                        connect: {
-                          id: userEntity.id,
-                        },
+                        email: email.value.toLowerCase(),
+                        username: username.value.toLowerCase(),
+                        password: password.value,
+                        surname: surname.value,
+                        name: name.value
                       },
-                      role: {
-                        connect: {
-                          system_name: 'USER',
-                        },
-                      },
-                    });
-                    await addRoleToUser(response.user.id);
+                      UserRole.CUSTOMER
+                    );
                   }
                   return response;
                 },
-                signInPOST: async function (input) {
+                signInPOST: async function(input) {
                   if (originalImplementation.signInPOST === undefined) {
-                    throw Error('Should never come here');
+                    throw Error("You can`t come here");
                   }
 
-                  // First we call the original implementation of signInPOST.
                   const response = await originalImplementation.signInPOST(
-                    input,
+                    input
                   );
 
-                  // Post sign up response, we check if it was successful
-                  if (response.status === 'OK') {
+                  if (response.status === "OK") {
                     const { id, email } = response.user;
 
-                    // These are the input form fields values that the user used while signing in
                     const formFields = input.formFields;
-                    // TODO: post sign in logic
-                    const currentUser: any = await userService.user({
-                      email: email,
-                    });
-                    if (
-                      currentUser.userRoles.some(
-                        (role) => role.role.system_name == 'ADMIN',
-                      )
-                    ) {
-                      await addRoleToUser(id, 'ADMIN');
-                    }
+                    const currentUser: any = await userService.getSiteUserDataByEmail(email);
                   }
                   return response;
-                },
+                }
               };
-            },
-          },
+            }
+          }
         }),
-        Session.init({ getTokenTransferMethod: () => 'cookie' }),
-        Dashboard.init(),
-        UserRoles.init(),
-      ],
+        Session.init({ getTokenTransferMethod: () => "cookie" }),
+        Dashboard.init()
+      ]
     });
   }
 }

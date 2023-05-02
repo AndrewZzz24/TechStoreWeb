@@ -14,7 +14,6 @@ import supertokens from "supertokens-node";
 import Session from "supertokens-node/recipe/session";
 import EmailPassword from "supertokens-node/recipe/emailpassword";
 import { middleware } from "supertokens-node/lib/build/framework/express";
-
 async function bootstrap() {
   // supertokens.init({
   //   framework: "express",
