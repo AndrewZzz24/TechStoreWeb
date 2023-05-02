@@ -5,9 +5,19 @@ import { AppModule } from './app.module';
 import * as hbs from 'hbs';
 import * as fs from 'fs';
 import { ServerTimeInterceptor } from './serverTime.interceptor';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
+
+  const config = new DocumentBuilder()
+    .setTitle('TechStore')
+    .setDescription('The "TechStore" WebService API description')
+    .setVersion('1.0')
+    .addTag('techStoreShop')
+    .build();
+  const document = SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup('api', app, document);
 
   app.useGlobalInterceptors(new ServerTimeInterceptor());
   app.useStaticAssets(join(__dirname, '..', '/public'));
