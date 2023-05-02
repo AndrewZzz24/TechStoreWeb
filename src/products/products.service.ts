@@ -109,6 +109,9 @@ export class ProductsService {
   }
 
   private async validateRequest(createProductRequest: CreateProductRequest) {
+    if (createProductRequest.discountPercent < 0){
+      throw new InvalidCreateProductRequestException(`discount cannot be less than 0, found=${createProductRequest.discountPercent}`)
+    }
     if (await this.prisma.siteUserData.findUnique({ where: { username: createProductRequest.creatorUsername } }) === null) {
       throw new InvalidCreateProductRequestException("product creator's username does not exists");
     }

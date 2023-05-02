@@ -100,23 +100,23 @@ export class UserController {
     return this.userService.deleteUser(user.email);
   }
 
-  @ApiBearerAuth()
-  @ApiOperation({ summary: "Auth user" })
-  @ApiResponse({
-    status: 200,
-    description: "The user has been successfully authorised",
-    type: UserDto
-  })
-  @ApiResponse({ status: 403, description: "Forbidden" })
-  @ApiResponse({ status: 404, description: "Not Found" })
-  @UseGuards(new AuthGuard())
-  @Post("/auth")
-  async auth(
-    @Session() session: SessionContainer,
-    @Body() authRequest: AuthRequest
-  ): Promise<UserDto> {
-    return this.userService.auth(authRequest);
-  }
+  // @ApiBearerAuth()
+  // @ApiOperation({ summary: "Auth user" })
+  // @ApiResponse({
+  //   status: 200,
+  //   description: "The user has been successfully authorised",
+  //   type: UserDto
+  // })
+  // @ApiResponse({ status: 403, description: "Forbidden" })
+  // @ApiResponse({ status: 404, description: "Not Found" })
+  // @UseGuards(new AuthGuard())
+  // @Post("/auth")
+  // async auth(
+  //   @Session() session: SessionContainer,
+  //   @Body() authRequest: AuthRequest
+  // ): Promise<UserDto> {
+  //   return this.userService.auth(authRequest);
+  // }
 
   @ApiOperation({ summary: "Get user`s cart" })
   @ApiParam({ name: "uid", type: "string" })

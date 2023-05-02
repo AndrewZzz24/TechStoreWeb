@@ -26,7 +26,7 @@ export class CartController {
   @ApiResponse({ status: 403, description: 'Forbidden' })
   @ApiResponse({ status: 404, description: 'Not Found' })
   @Get('/:cartId')
-  async getOrder(@Param('cartId') cartId: string): Promise<CartDto> {
+  async getCart(@Param('cartId') cartId: string): Promise<CartDto> {
     return this.cartService.getCart(cartId);
   }
 
@@ -38,7 +38,7 @@ export class CartController {
   })
   @ApiResponse({ status: 403, description: 'Forbidden' })
   @Post('create-cart')
-  async createOrder(
+  async createCart(
     @Body() createOrderRequest: CreateCartRequest,
   ): Promise<CartDto> {
     return this.cartService.createCart(createOrderRequest);
@@ -54,7 +54,7 @@ export class CartController {
   @ApiResponse({ status: 403, description: 'Forbidden' })
   @ApiResponse({ status: 404, description: 'Not Found' })
   @Delete('/:cartId')
-  async deleteOrder(@Param('cartId') cartId: string): Promise<boolean> {
+  async deleteCart(@Param('cartId') cartId: string): Promise<boolean> {
     return this.cartService.deleteCart(cartId);
   }
 }
