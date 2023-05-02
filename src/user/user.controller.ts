@@ -31,7 +31,6 @@ import { AuthGuard } from "../auth/auth.guard";
 import { Session } from "../auth/session.decorator";
 import EmailPassword from "supertokens-node/recipe/emailpassword";
 
-// @ApiBearerAuth()
 @ApiTags("users")
 @Controller("users")
 export class UserController {
@@ -81,6 +80,7 @@ export class UserController {
     return this.userService.createUser(createUserRequest, UserRole.ADMIN);
   }
 
+  @ApiBearerAuth()
   @ApiOperation({ summary: "Delete user" })
   @ApiParam({ name: "username", type: "string" })
   @ApiResponse({
@@ -100,6 +100,7 @@ export class UserController {
     return this.userService.deleteUser(user.email);
   }
 
+  @ApiBearerAuth()
   @ApiOperation({ summary: "Auth user" })
   @ApiResponse({
     status: 200,
@@ -108,7 +109,6 @@ export class UserController {
   })
   @ApiResponse({ status: 403, description: "Forbidden" })
   @ApiResponse({ status: 404, description: "Not Found" })
-  @ApiBearerAuth()
   @UseGuards(new AuthGuard())
   @Post("/auth")
   async auth(
@@ -146,6 +146,7 @@ export class UserController {
     return this.userService.getUserOrders(username);
   }
 
+  @ApiBearerAuth()
   @ApiOperation({ summary: "Get user`s support requests" })
   @ApiResponse({
     status: 200,
@@ -166,6 +167,7 @@ export class UserController {
     return this.userService.getUserSupportRequests(user.email, Number(cursor), Number(limit));
   }
 
+  @ApiBearerAuth()
   @ApiOperation({ summary: "Get user`s support requests" })
   @ApiResponse({
     status: 200,
@@ -174,6 +176,7 @@ export class UserController {
   })
   @ApiResponse({ status: 403, description: "Forbidden" })
   @ApiResponse({ status: 404, description: "Not Found" })
+  @UseGuards(new AuthGuard())
   @Post("/account/change-account-data")
   async changeUserAccountData(
     @Session() session: SessionContainer,

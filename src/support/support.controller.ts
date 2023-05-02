@@ -4,8 +4,8 @@ import {
   ApiOperation,
   ApiParam,
   ApiResponse,
-  ApiTags,
-} from '@nestjs/swagger';
+  ApiTags
+} from "@nestjs/swagger";
 import { SupportService } from './support.service';
 import { SupportRequest } from './dto/supportRequest.dto';
 import { CreateSupportRequest } from './dto/createSupportRequest';
@@ -35,6 +35,7 @@ export class SupportController {
     return this.supportService.getRequest(requestId);
   }
 
+  @ApiBearerAuth()
   @ApiOperation({ summary: 'Create support request' })
   @ApiResponse({
     status: 201,
