@@ -11,6 +11,7 @@ import { CartModule } from './cart/cart.module';
 import { HttpExceptionFilter } from "./exception.filter";
 import { PrismaClientExceptionFilter } from "nestjs-prisma";
 import { AuthModule } from './auth/auth.module';
+import { AppGatewayModule } from "./appGateway/appGateway.module";
 
 @Module({
   imports: [
@@ -29,6 +30,7 @@ import { AuthModule } from './auth/auth.module';
     ProductsModule,
     SupportModule,
     UserModule,
+    AppGatewayModule,
   ],
   controllers: [AppController],
   providers: [
