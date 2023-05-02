@@ -142,7 +142,7 @@ function changeAccountData() {
   let existedUserdata = JSON.parse(localStorage.getItem("userdata"));
 
   const oldPassword = document.getElementById("oldPassword").value.trim();
-  const changedPassword = document.getElementById("changedPassword").value.trim();
+  const changedPassword = document.getElementById("oldPassword").value.trim();
   const changedName = document.getElementById("changedName").value.trim();
   const changedSurname = document.getElementById("changedSurname").value.trim();
 
