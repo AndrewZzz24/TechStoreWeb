@@ -4,11 +4,15 @@ import { PrismaService } from "../prisma.service";
 import { HelpDeskSupportRequest, HelpDeskSupportRequestStatus } from "@prisma/client";
 import { CreateSupportRequest } from "./dto/createSupportRequest";
 import { InvalidCreateSupportRequestRequestException, SupportRequestNotFoundException } from "./utils/exceptions";
+import { AppGateway } from "../appGateway/app.gateway";
 
 @Injectable()
 export class SupportService {
 
-  constructor(private prisma: PrismaService) {
+  constructor(
+    private prisma: PrismaService,
+    private gateway: AppGateway,
+  ) {
   }
 
   async getRequest(requestId: string): Promise<SupportRequest> {
@@ -46,7 +50,9 @@ export class SupportService {
         userId: user.id
       }
     });
-    return this.toSupportRequest(supportRequestDb);
+    let supportRequest = this.toSupportRequest(supportRequestDb);
+    this.gateway.server.emit('newSupportRequest', supportRequest);
+    return supportRequest
   }
 
   async deleteRequest(requestId: string): Promise<boolean> {
