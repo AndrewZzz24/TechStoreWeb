@@ -17,7 +17,7 @@ export class AppController {
   }
 
   @Get('projects')
-  @Render('projects.hbs') // <= Название вашего представления
+  @Render('goods.hbs') // <= Название вашего представления
   getProjectsPage() {
     return { user: 'Hello world!' }; // Модель представления
   }

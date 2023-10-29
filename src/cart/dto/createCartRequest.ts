@@ -1,8 +1,9 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { IsNotEmpty, IsPositive } from "class-validator";
 
 export class CreateCartRequest {
   @ApiProperty()
-  readonly customerUsername: string;
-  @ApiProperty()
-  readonly info?: string;
+  @IsNotEmpty()
+  @IsPositive()
+  readonly userId: number;
 }

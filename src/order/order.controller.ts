@@ -1,6 +1,5 @@
 import { Get, Post, Delete, Param, Controller, Body } from "@nestjs/common";
 import {
-  ApiBearerAuth,
   ApiOperation,
   ApiParam,
   ApiResponse,
@@ -10,7 +9,6 @@ import { OrderService } from './order.service';
 import { OrderDto } from './dto/order.dto';
 import { CreateOrderRequest } from "./dto/createOrderRequest";
 
-@ApiBearerAuth()
 @ApiTags('orders')
 @Controller('orders')
 export class OrderController {
@@ -31,7 +29,6 @@ export class OrderController {
   }
 
   @ApiOperation({ summary: 'Create order' })
-  @ApiParam({ name: 'createOrderRequest', type: CreateOrderRequest })
   @ApiResponse({
     status: 201,
     description: 'The order has been successfully created.',

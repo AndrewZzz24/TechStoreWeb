@@ -1,9 +1,14 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  {{> head title="Отзывы"}}
+  {{> head title="Поддержка"}}
   <link rel="stylesheet" href="Sources/Styles/Tables/feedback_form.css" type="text/css">
   <script src="Sources/Scripts/feedbackForm.js"></script>
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="https://code.jquery.com/jquery-1.9.1.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+  <script src="Sources/Scripts/socketNotify.js"></script>
+  <link href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" rel="stylesheet" />
 </head>
 <body class="default-body">
 {{> header }}
@@ -14,25 +19,28 @@
     </h2>
     <div>
       <form id="feedback-form-id" class="feedback-form">
-        <label for="title"></label><input required type="text" maxlength="50" placeholder="Ваш вопрос"
-                                          class="text-field box1" id="title">
-        <label for="contact"></label><input required type="text" maxlength="50" placeholder="Контакт для связи"
-                                            class="text-field box2" id="contact">
-        <label for="description"></label><input required type="text" placeholder="Опиcание" class="text-field box3"
-                                                id="description">
-        <input type="submit" class="submit-button box4">
+        <div>
+          <input required type="text" maxlength="50" placeholder="Тема обращение" class="text-field box1" id="title">
+          <label for="title"></label>
+        </div>
+        <div>
+          <input required type="text" placeholder="Текст обращения" class="text-field box3" id="description">
+          <label for="description"></label>
+        </div>
+        <input type="button" class="submit-button box4" value="Send" onclick="listenToSubmit()">
       </form>
     </div>
     <h2>
-      <span>Ваши предложения:</span>
+      <span>Ваши обращения:</span>
     </h2>
     <div>
       <table class="grid-form-table">
         <thead>
         <tr>
-          <th>Вопрос</th>
-          <th>Контакт</th>
-          <th>Описание</th>
+          <th>Тема обращения</th>
+          <th>Дата обращения</th>
+          <th>Текст обращения</th>
+          <th>Статус</th>
         </tr>
         </thead>
         <tbody class="grid-from-table-body">
@@ -44,14 +52,18 @@
             ${suggestObject["title"].toString()}
           </td>
           <td>
-            ${suggestObject["contact"].toString()}
+            ${suggestObject["createdAt"].toString()}
           </td>
           <td>
-            ${suggestObject["description"].toString()}
+            ${suggestObject["message"].toString()}
+          </td>
+          <td>
+            ${suggestObject["status"].toString()}
           </td>
         </tr>
       </template>
     </div>
+    <button id="downloadButton" class="pagination-button">Download More</button>
   </section>
 </main>
 {{> footer}}

@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  {{> head title="Каталог Товаров"}}
+  <link rel="stylesheet" href="Sources/Styles/Tables/products.css" type="text/css">
+</head>
+<body class="default-body">
+{{> header }}
+<main>
+  <section class="main-section">
+    <h2 class="main-section-header">
+      Каталог товаров
+    </h2>
+    <div class="product-list" id="comments">
+      <img src="Sources/MediaSources/loading.webp" alt="loading" id="loading" class="loading">
+    </div>
+    <button id="downloadProductsButton" class="pagination-button">Download More</button>
+  </section>
+</main>
+{{> footer}}
+<script src="Sources/Scripts/comments.js"></script>
+</body>
+</html>

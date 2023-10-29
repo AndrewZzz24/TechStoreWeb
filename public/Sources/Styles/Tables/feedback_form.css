@@ -28,8 +28,8 @@
     display: grid;
     grid-gap: 5px;
     padding-right: 10px;
-    grid-template-columns: 1fr 1fr 5fr 1fr;
-    grid-template-areas: "box1 box2 box3 box4";
+    grid-template-columns: 1fr 5fr 1fr;
+    grid-template-areas: "box1 box3 box4";
 }
 
 .login-form {
@@ -49,7 +49,6 @@
         margin-bottom: 2px;
         grid-template-areas:
                         "box1"
-                        "box2"
                         "box3"
                         "box4";
     }
@@ -90,7 +89,7 @@
     border-width: 1px;
     border-style: solid;
     border-color: beige;
-    grid-template-columns: 1fr 1fr 4fr
+    grid-template-columns: 1fr 1fr 4fr 1fr
 }
 
 .grid-from-table-body {

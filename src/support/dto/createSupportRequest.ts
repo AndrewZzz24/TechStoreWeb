@@ -1,12 +1,17 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { IsNotEmpty, IsPositive } from "class-validator";
 
 export class CreateSupportRequest {
+  // @ApiProperty()
+  // @IsPositive()
+  // @IsNotEmpty()
+  // readonly userId: number;
+
   @ApiProperty()
-  readonly usernameInitiator: string;
-  @ApiProperty()
+  @IsNotEmpty()
   readonly title: string;
+
   @ApiProperty()
+  @IsNotEmpty()
   readonly message: string;
-  @ApiProperty()
-  readonly info?: string;
 }

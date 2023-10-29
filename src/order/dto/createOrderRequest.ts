@@ -1,12 +1,23 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { OrderLineDto } from "./orderLine.dto";
+import { IsNotEmpty, IsPositive } from "class-validator";
 
 export class CreateOrderRequest {
   @ApiProperty()
-  readonly customerUsername: string;
+  @IsNotEmpty()
+  @IsPositive()
+  readonly userId: number;
+
   @ApiProperty()
-  readonly productIds: string[];
+  readonly orderLines: string[];
+
   @ApiProperty()
+  @IsNotEmpty()
+  @IsPositive()
   readonly totalPrice: number;
+
   @ApiProperty()
-  readonly info?: string;
+  @IsNotEmpty()
+  @IsPositive()
+  readonly cartId: number;
 }

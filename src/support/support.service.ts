@@ -1,20 +1,118 @@
-import { Injectable, NotImplementedException } from '@nestjs/common';
-import { SupportRequest } from './dto/supportRequest.dto';
-import { CreateSupportRequest } from './dto/createSupportRequest';
+import { Injectable } from "@nestjs/common";
+import { SupportRequest } from "./dto/supportRequest.dto";
+import { PrismaService } from "../prisma.service";
+import { HelpDeskSupportRequest, HelpDeskSupportRequestStatus } from "@prisma/client";
+import { CreateSupportRequest } from "./dto/createSupportRequest";
+import { InvalidCreateSupportRequestRequestException, SupportRequestNotFoundException } from "./utils/exceptions";
+import { AppGateway } from "../appGateway/app.gateway";
 
 @Injectable()
 export class SupportService {
-  getRequest(requestId: string): Promise<SupportRequest> {
-    throw new NotImplementedException();
+
+  constructor(
+    private prisma: PrismaService,
+    private gateway: AppGateway,
+  ) {
   }
 
-  createRequest(
-    supportRequestDto: CreateSupportRequest,
+  async getRequest(requestId: string): Promise<SupportRequest> {
+    const supportRequest = await this.prisma.helpDeskSupportRequest.findUnique({
+      where: {
+        id: Number(requestId)
+      }
+    });
+
+    if (supportRequest == null) {
+      throw new SupportRequestNotFoundException(`no support request with such requestId = ${requestId}`);
+    }
+
+    return this.toSupportRequest(supportRequest);
+  }
+
+  async createRequest(
+    email: string,
+    createSupportRequest: CreateSupportRequest
   ): Promise<SupportRequest> {
-    throw new NotImplementedException();
+    await this.validateRequest(email);
+    const user = await this.prisma.siteUserData.findUnique({
+      where: {
+        email: email
+      }
+    })
+
+    const time = new Date().toISOString();
+    const supportRequestDb = await this.prisma.helpDeskSupportRequest.create({
+      data: {
+        createdAt: time,
+        title: createSupportRequest.title,
+        message: createSupportRequest.message,
+        status: HelpDeskSupportRequestStatus.CREATED,
+        userId: user.id
+      }
+    });
+    let supportRequest = this.toSupportRequest(supportRequestDb);
+    this.gateway.server.emit('newSupportRequest', supportRequest);
+    return supportRequest
   }
 
-  deleteRequest(requestId: string): Promise<boolean> {
-    throw new NotImplementedException();
+  async deleteRequest(requestId: string): Promise<boolean> {
+    if (await this.prisma.helpDeskSupportRequest.findUnique({ where: { id: Number(requestId) } }) == null) {
+      throw new SupportRequestNotFoundException(`no support request with such requestId = ${requestId}`);
+    }
+
+    const deletedSupportRequest = await this.prisma.helpDeskSupportRequest.delete({
+      where: {
+        id: Number(requestId)
+      }
+    });
+
+    return deletedSupportRequest != null;
+  }
+
+  async getUserSupportRequests(email: string, cursor: number, limit: number): Promise<SupportRequest[]> {
+    console.log(`EMAIL === ${email}`)
+    const user = await this.prisma.siteUserData.findUnique({
+      where: {
+        email: email
+      }
+    })
+    if (user === null) {
+      throw new InvalidCreateSupportRequestRequestException(`no such user registered email= ${email}`);
+    }
+
+    const supportRequests = await this.prisma.helpDeskSupportRequest.findMany({
+      skip: cursor * limit,
+      where: {
+        userId: user.id
+      },
+      take: limit + 1
+    });
+    return supportRequests.map(function(value) {
+      return new SupportRequest(
+        value.id,
+        value.createdAt.toString(),
+        value.userId,
+        value.title,
+        value.message,
+        value.status
+      );
+    });
+  }
+
+  private toSupportRequest(value: HelpDeskSupportRequest): SupportRequest {
+    return new SupportRequest(
+      value.id,
+      value.createdAt.toString(),
+      value.userId,
+      value.title,
+      value.message,
+      value.status
+    );
+  }
+
+  private async validateRequest(email: string) {
+    if (await this.prisma.siteUserData.findUnique({ where: { email: email } }) === null) {
+      throw new InvalidCreateSupportRequestRequestException("no such user registered");
+    }
   }
 }

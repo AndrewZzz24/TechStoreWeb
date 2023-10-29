@@ -1,5 +1,5 @@
-import { Get, Post, Delete, Param, Controller, Body } from '@nestjs/common';
-import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { Get, Post, Delete, Param, Controller, Body, Query } from "@nestjs/common";
+import { ApiBearerAuth, ApiOperation, ApiParam, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { ProductsService } from './products.service';
 import { ProductDto } from './dto/product.dto';
 import { CreateProductRequest } from './dto/createProductRequest';
@@ -24,7 +24,6 @@ export class ProductsController {
   }
 
   @ApiOperation({ summary: 'Create product' })
-  @ApiParam({ name: 'createProductRequest', type: CreateProductRequest })
   @ApiResponse({
     status: 201,
     description: 'The product has been successfully created.',
@@ -56,12 +55,15 @@ export class ProductsController {
   @ApiResponse({
     status: 200,
     description: 'The product has been successfully found.',
-    type: Array<ProductDto>,
+    type: [ProductDto],
   })
   @ApiResponse({ status: 403, description: 'Forbidden' })
   @ApiResponse({ status: 404, description: 'Not Found' })
-  @Get('/get-all-available-products')
-  async getAllProducts(): Promise<ProductDto[]> {
-    return this.productsService.getAllAvailableProducts();
+  @Get()
+  async getAllProducts(
+    @Query('cursor') cursor: string,
+    @Query('limit') limit: string,
+  ): Promise<ProductDto[]> {
+    return this.productsService.getAllAvailableProducts(Number(cursor), Number(limit));
   }
 }

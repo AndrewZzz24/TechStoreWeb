@@ -1,4 +1,5 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty } from "@nestjs/swagger";
+import { HelpDeskSupportRequestStatus } from "@prisma/client";
 
 export class SupportRequest {
   @ApiProperty()
@@ -6,11 +7,27 @@ export class SupportRequest {
   @ApiProperty()
   readonly createdAt: string;
   @ApiProperty()
-  readonly usernameInitiator: string;
+  readonly userId: number;
   @ApiProperty()
   readonly title: string;
   @ApiProperty()
   readonly message: string;
   @ApiProperty()
-  readonly info?: string;
+  readonly status: HelpDeskSupportRequestStatus;
+
+  constructor(
+    id: number,
+    createdAt: string,
+    userId: number,
+    title: string,
+    message: string,
+    status: HelpDeskSupportRequestStatus
+  ) {
+    this.id = id;
+    this.userId = userId;
+    this.createdAt = createdAt;
+    this.title = title;
+    this.message = message;
+    this.status = status;
+  }
 }
