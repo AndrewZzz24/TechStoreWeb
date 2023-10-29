@@ -1,3 +1,21 @@
+## Website Schema:
+### [Website Page](https://azweb.onrender.com):
+
+![Homepage](public/ReadmeSources/migrations.jpg)
+
+- _**SiteUserData**_ - an abstract entity denoting a website user and storing basic user information regardless of their role.
+- _**Admin**_ - website administrator, manages reviews and handles purchases.
+- _**User**_ - website user, buyer.
+- _**HelpDeskSupportHistory**_ - entity representing the history of support requests, contains information about the request (topic, date, reason, status).
+- _**Transaction**_ - entity responsible for a transaction, contains payment details.
+- _**TransactionReceipt**_ - entity containing information about a purchase receipt.
+- _**Cart**_ - virtual cart entity where the buyer adds items.
+- _**ProductItem**_ - store item entity, stores basic information about the product.
+- _**Category**_ - category entity; each item can belong to a category.
+- _**Review**_ - entity representing reviews that buyers leave about purchased items.
+
+
+
 # Лабораторные работы по курсу "Web-программирование"
 ## Змушко Андрей М33031
 
