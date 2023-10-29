@@ -17,8 +17,8 @@
 - _**Category**_ - category entity; each item can belong to a category.
 - _**Review**_ - entity representing reviews that buyers leave about purchased items.
 
-
-
+#
+#
 # Лабораторные работы по курсу "Web-программирование"
 ## Змушко Андрей М33031
 
